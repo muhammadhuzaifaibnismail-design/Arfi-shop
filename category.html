@@ -1,0 +1,4 @@
+<!doctype html><html lang=ur dir=rtl><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ادویات | عارفی دارالشفاء</title><link rel=icon href=img/logo.webp><link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel=stylesheet><link rel=stylesheet href=style.css></head><body><main id=m></main><script src=data.js></script><script src=app.js></script><script>lay();
+const c=new URLSearchParams(location.search).get('c')||'all',ct=CATS.find(x=>x[0]==c)||CATS[0];
+document.title=ct[1];const L=c=='all'?P:P.filter(p=>p.c.includes(c));
+$('#m').innerHTML='<h2>'+ct[1]+'</h2>'+(L.length?'<div class=grid>'+L.map(card).join('')+'</div>':'<div class=box>اس زمرے کی ادویات جلد شامل کی جائیں گی۔ مشورے کے لیے نیچے واٹس ایپ بٹن دبائیں۔</div>');</script></body></html>
