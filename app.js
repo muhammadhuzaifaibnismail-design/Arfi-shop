@@ -7,8 +7,10 @@ const sv=c=>{try{localStorage.setItem("arfi_cart",JSON.stringify(c))}catch(e){}b
 const badge=()=>{const n=ld().reduce((s,l)=>s+l.q,0),b=$("#cb");if(b){b.textContent=n;b.style.display=n?"block":"none"}};
 const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1800)};
 const lp=l=>gp(l.id).v[l.v][1];
+const md=t=>t.split(/\n{2,}/).map(b=>b.startsWith('# ')?'<h3>'+b.slice(2)+'</h3>':b.startsWith('- ')?'<ul>'+b.split('\n').map(l=>'<li>'+l.replace(/^- /,'')+'</li>').join('')+'</ul>':'<p>'+b.replace(/\n/g,'<br>')+'</p>').join('').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const desc=p=>p.t?md(p.t):'';
 function add(id,v,q){const c=ld(),l=c.find(x=>x.id==id&&x.v==v);l?l.q+=q:c.push({id,v,q});sv(c);toast("✔ کارٹ میں شامل ہو گیا")}
-function card(p){const pr=p.v[0][1];return`<a class=pc href="product.html?id=${p.id}"><div class=im>${p.img?`<img src=img/${p.img} alt="${p.n}" loading=lazy>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+fmt(pr):""}</div></a>`}
+function card(p){const pr=p.v[0][1];return`<a class=pc href="product.html?id=${p.id}"><div class=im>${p.img?`<img src=${p.img} alt="${p.n}" loading=lazy>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+fmt(pr):""}</div></a>`}
 function calc(c,code,pay){
  const sub=c.reduce((s,l)=>s+lp(l)*l.q,0),n=c.reduce((s,l)=>s+l.q,0);
  const multi=Math.min(sub,Math.max(0,n-1)*100);let a=sub-multi;
@@ -21,10 +23,10 @@ ig:'<svg class=ln viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="
 tt:'<svg viewBox="0 0 24 24"><path d="M16.6 2h-3.2v13.2a2.700 2.700 0 1 1-2.700-2.700c.3 0 .6 0 .8.100V9.300a6 6 0 1 0 5.100 5.900V8.800a7.400 7.400 0 0 0 4.300 1.400V7a4.300 4.300 0 0 1-4.300-5z"/></svg>'};
 function lay(){
  const mi=[["index.html","🏠 ہوم"],...CATS.map(c=>["category.html?c="+c[0],c[2]+" "+c[1]]),["diseases.html","📖 بیماریاں اور ان کے علاج"],["about.html","ℹ️ ہمارا تعارف"],["terms.html","📄 شرائط و ضوابط"]];
- document.body.insertAdjacentHTML("afterbegin",`<div class=top>🚚 پورے پاکستان میں فری ہوم ڈیلیوری</div><header><a href=index.html><img src=img/logo.webp alt="عارفی دارالشفاء"></a><div class=hr><a class=cartb href=cart.html aria-label="کارٹ">🛒<b id=cb></b></a><button class=mb id=mb aria-label="مینیو"><i></i><i></i><i></i></button></div></header><div class=dr id=dr><div class=dp><button class=dx id=dx aria-label="بند کریں">×</button><img src=img/logo.webp alt="" style="height:44px;margin:0 16px"><nav>${mi.map(m=>`<a href="${m[0]}">${m[1]}</a>`).join("")}</nav></div></div>`);
+ document.body.insertAdjacentHTML("afterbegin",`<div class=top>🚚 پورے پاکستان میں فری ہوم ڈیلیوری</div><header><a class=cartb href=cart.html aria-label="کارٹ">🛒<b id=cb></b></a><a href=index.html class=lg><img src=logo.webp alt="عارفی دارالشفاء"></a><button class=mb id=mb aria-label="مینیو"><i></i><i></i><i></i></button></header><div class=dr id=dr><div class=dp><button class=dx id=dx aria-label="بند کریں">×</button><img src=logo.webp alt="" style="height:44px;margin:0 16px"><nav>${mi.map(m=>`<a href="${m[0]}">${m[1]}</a>`).join("")}</nav></div></div>`);
  const op=v=>$("#dr").classList.toggle("on",v);$("#mb").onclick=()=>op(1);$("#dx").onclick=()=>op(0);$("#dr").onclick=e=>{if(e.target.id=="dr")op(0)};
  const so=(h,i,l)=>`<a href="${h}" target=_blank rel=noopener aria-label="${l}">${IC[i]}</a>`;
- document.body.insertAdjacentHTML("beforeend",`<footer><div class=fw><div class=fb><img src=img/logo.webp alt=""><p>خالص جڑی بوٹیوں سے تیار کردہ ادویات، پورے پاکستان میں ہوم ڈیلیوری کے ساتھ۔</p><div class=so>${so(wa("I'm From www.arfidarushifa.pk"),"wa","WhatsApp")}${so("https://www.facebook.com/arfidarushifa/","fb","Facebook")}${so("https://www.instagram.com/arfidarushifa/","ig","Instagram")}${so("https://www.tiktok.com/@arfi_darushifa","tt","TikTok")}</div></div>
+ document.body.insertAdjacentHTML("beforeend",`<footer><div class=fw><div class=fb><img src=logo.webp alt=""><p>خالص جڑی بوٹیوں سے تیار کردہ ادویات، پورے پاکستان میں ہوم ڈیلیوری کے ساتھ۔</p><div class=so>${so(wa("I'm From www.arfidarushifa.pk"),"wa","WhatsApp")}${so("https://www.facebook.com/arfidarushifa/","fb","Facebook")}${so("https://www.instagram.com/arfidarushifa/","ig","Instagram")}${so("https://www.tiktok.com/@arfi_darushifa","tt","TikTok")}</div></div>
  <div class=fc><h4>ادویات</h4>${CATS.map(c=>`<a href="category.html?c=${c[0]}">${c[1]}</a>`).join("")}<a href=diseases.html>بیماریاں اور علاج</a></div>
  <div class=fc><h4>معلومات</h4><a href=about.html>ہمارا تعارف</a><a href=terms.html>شرائط و ضوابط</a><a href=cart.html>میرا کارٹ</a></div>
  <div class=fc><h4>رابطہ</h4><a href="${wa("میں آپ سے رابطہ کرنا چاہتا ہوں")}" target=_blank>واٹس ایپ: <bdi dir=ltr>0311-1307530</bdi></a><span>ہفتہ تا جمعرات<br>صبح 9 تا شام 5 بجے</span></div></div>

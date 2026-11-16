@@ -1,6 +1,6 @@
-<!doctype html><html lang=ur dir=rtl><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ہوم | عارفی دارالشفاء</title><link rel=icon href=img/logo.webp><link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel=stylesheet><link rel=stylesheet href=style.css></head><body><main id=m></main><script src=data.js></script><script src=app.js></script><script>lay();
+<!doctype html><html lang=ur dir=rtl><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ہوم | عارفی دارالشفاء</title><link rel=icon href=logo.webp><link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel=stylesheet><link rel=stylesheet href=style.css></head><body><main id=m></main><script src=products.js></script><script src=data.js></script><script src=app.js></script><script>lay();
 const POP=['akseer-arfi','honey','shah-akbari','shilajit','hair-oil','gastro'].map(gp);
-$('#m').innerHTML=`<div class=sl>${[1,2,3,4].map(i=>'<img src=img/s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
+$('#m').innerHTML=`<div class=sl>${[1,2,3,4].map(i=>'<img src=s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
 <h2>ہماری ادویات</h2><div class=grid>${CATS.map(c=>`<a class=cat href="category.html?c=${c[0]}"><i>${c[2]}</i>${c[1]}</a>`).join('')}</div>
 <a class=dis href=diseases.html>📖 بیماریاں اور ان کے علاج<small>اپنی تکلیف تلاش کریں، اس کے لیے موزوں دوا ایک ہی جگہ دیکھیں</small></a>
 <h2>مقبول ادویات</h2><div class=grid>${POP.map(card).join('')}</div>
