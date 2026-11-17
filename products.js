@@ -154,8 +154,12 @@ const PRODUCTS=[
   "c": [],
   "v": [
    [
-    "",
-    0
+    "100 گرام",
+    900
+   ],
+   [
+    "300 گرام",
+    2100
    ]
   ],
   "s": "majoon-depression",
@@ -166,7 +170,10 @@ const PRODUCTS=[
     "s": 5,
     "t": "Apki majon dipretion sy Meri nind behter hoi hy boht 2 3 mahiny Khao ga tu dipretion pori tarha khatam hu jaye ga sir."
    }
-  ]
+  ],
+  "t": "**ڈپریشن، مالیخولیا، جنون، اور پاگل پن کے علاج میں مؤثر!**\n\nیہ معجون ان مسائل کے علاج کے لیے مرکزی حیثیت رکھتی ہے۔\n\nذہنی صحت کو بحال کرنے اور سکون فراہم کرنے کے لیے اس کا استعمال کریں۔",
+  "md": "ڈپریشن، مالیخولیا اور ذہنی سکون کے لیے خصوصی معجون۔ ذہنی صحت کی بہتری اور سکون کے حوالے سے عارفی دارالشفاء کی پیشکش۔",
+  "img": "depression-mwkjrcj4.jpg"
  },
  {
   "id": "antibiotic",
