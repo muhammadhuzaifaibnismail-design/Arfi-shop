@@ -130,8 +130,11 @@ function hfCss(){if($("#hfs"))return;document.head.insertAdjacentHTML("beforeend
 .hnt{font-size:.82rem;color:#6b7a6f;text-align:center;line-height:1.9;margin:6px 0 0}
 </style>`)}
 function hfInit(){hfCss();const b=$("#hf");if(b)b.onclick=hfOpen}
-function hfClose(){const o=$("#hfo");if(o)o.remove();document.body.style.overflow="";HFS=null}
-function hfOpen(){hfClose();document.body.style.overflow="hidden";
+let HFH=false;
+function hfRm(){const o=$("#hfo");if(o)o.remove();document.body.style.overflow="";HFS=null}
+function hfClose(){const h=HFH;HFH=false;hfRm();if(h){try{history.back()}catch(e){}}}
+window.addEventListener("popstate",()=>{if($("#hfo")){HFH=false;hfRm()}});
+function hfOpen(){hfRm();if(!HFH){try{history.pushState({hf:1},"");HFH=true}catch(e){}}document.body.style.overflow="hidden";
  document.body.insertAdjacentHTML("beforeend",`<div class=hfo id=hfo><div class=hfx role=dialog aria-modal=true><div class=hfh><button type=button id=hfb aria-label="واپس">→</button><b id=hft></b><button type=button id=hfc aria-label="بند کریں">×</button></div><div class=hfy id=hfy></div></div></div>`);
  const o=$("#hfo");$("#hfc").onclick=hfClose;$("#hfb").onclick=()=>{if(HFS&&Object.keys(HFS.a).length&&!confirm("بھری ہوئی معلومات مٹ جائیں گی۔ واپس جائیں؟"))return;hfMenu()};
  o.addEventListener("click",e=>{if(e.target.id=="hfo"&&!HFS)hfClose()});

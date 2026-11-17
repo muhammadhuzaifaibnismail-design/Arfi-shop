@@ -23,19 +23,22 @@ function home(){
  if(!t.length)t=['akseer-arfi','honey','shah-akbari'].map(gp).filter(Boolean);
  $('#m').innerHTML=`<div class=sl>${[1,2,3,4].map(i=>'<img src=s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
 ${secHead('ہماری ادویات')}<div class=grid>${CATS.map(c=>`<a class=cat href="${cu(c)}"><i>${c[2]}</i>${c[1]}</a>`).join('')}</div>
-<a class=dis href="${gu('diseases')}">بیماریاں اور ان کے علاج</a>
+<div class=dw><a class=dis href="${gu('diseases')}">بیماریاں اور ان کے علاج</a></div>
 ${secHead('ٹاپ ریٹڈ پروڈکٹس','وہ ادویات جنہیں ہمارے کسٹمرز نے سب سے زیادہ پسند کیا')}<div class=grid>${t.map(p=>card(p,1)).join('')}</div>
 ${hrv()}`;
  let k=0;const s=$$('.sl img');setInterval(()=>{s[k].classList.remove('on');k=(k+1)%s.length;s[k].classList.add('on')},2500)}
 
 function hrv(){const A=ARV();if(!A.length)return'';const sh=HRV.length?HRV.slice(0,3).map(r=>[r,r.p]):A.slice(0,3);
- return secHead('ہیپی کسٹمرز','ہمارے خوش کسٹمرز کے فیڈبیک')+'<div class=rvs>'+sh.map(x=>rvCard(x[0],x[1])).join('')+'</div>'+(A.length>sh.length?'<p style="text-align:center;margin:14px"><a class="btn lt" style="display:inline-block;width:auto;padding:8px 28px" href="'+BS()+'reviews">تمام کسٹمرز کے فیڈبیک دیکھیں</a></p>':'')}
-function rev(){document.title='ہیپی کسٹمرز | عارفی دارالشفاء';const A=ARV();
- $('#m').innerHTML=secHead('ہیپی کسٹمرز','ہمارے خوش کسٹمرز کے فیڈبیک')+(A.length?'<div class=rvs>'+A.map(x=>rvCard(x[0],x[1])).join('')+'</div>':'<div class=box style=text-align:center>ابھی کوئی فیڈبیک موجود نہیں۔</div>')}
+ return secHead('ہیپی کسٹمرز','ہمارے معزز کسٹمرز کی تاثرات')+'<div class=rvs>'+sh.map(x=>rvCard(x[0],x[1])).join('')+'</div>'+(A.length>sh.length?'<p style="text-align:center;margin:14px"><a class="btn lt" style="display:inline-block;width:auto;padding:8px 28px" href="'+BS()+'reviews">تمام کسٹمرز کے فیڈبیک دیکھیں</a></p>':'')}
+function rev(){document.title='ہیپی کسٹمرز | عارفی دارالشفاء';const A=ARV(),N=10;let n=0;
+ $('#m').innerHTML=secHead('ہیپی کسٹمرز','ہمارے معزز کسٹمرز کی تاثرات')+(A.length?'<div class=rvs id=rl></div><p class=rmw id=rmw><button type=button class="btn lt" id=rm>مزید دکھائیں</button></p>':'<div class=box style=text-align:center>ابھی کوئی فیڈبیک موجود نہیں۔</div>');
+ if(!A.length)return;
+ const more=()=>{const e=A.slice(n,n+N);$('#rl').insertAdjacentHTML('beforeend',e.map(x=>rvCard(x[0],x[1])).join(''));n+=e.length;if(n>=A.length)$('#rmw').remove()};
+ $('#rm').onclick=more;more()}
 
 function cat(c){const ct=CATS.find(x=>x[0]==c)||CATS[0];c=ct[0];
  document.title=ct[1];const L=c=='all'?P:P.filter(p=>p.c.includes(c));
- $('#m').innerHTML='<h2>'+ct[1]+'</h2>'+(L.length?'<div class=grid>'+L.map(p=>card(p)).join('')+'</div>':'<div class=box>اس زمرے کی ادویات جلد شامل کی جائیں گی۔ مشورے کے لیے نیچے واٹس ایپ بٹن دبائیں۔</div>')}
+ $('#m').innerHTML='<div class="sh ch"><h2>'+ct[1]+'</h2><div class=sd><i></i></div></div>'+(L.length?'<div class=grid>'+L.map(p=>card(p)).join('')+'</div>':'<div class=box>اس زمرے کی ادویات جلد شامل کی جائیں گی۔ مشورے کے لیے نیچے واٹس ایپ بٹن دبائیں۔</div>')}
 
 function dis(){document.title='بیماریاں اور ان کے علاج | عارفی دارالشفاء';
  $('#m').innerHTML='<h2>بیماریاں اور ان کے علاج</h2>'+D.map(d=>{const ids=d[1].split(',').filter(gp);
