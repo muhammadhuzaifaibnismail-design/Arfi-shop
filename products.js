@@ -89,6 +89,7 @@ const PRODUCTS=[
   "id": "Muqawi-Badan",
   "n": "مقوی بدن",
   "c": [
+   "c",
    "m",
    "w"
   ],
