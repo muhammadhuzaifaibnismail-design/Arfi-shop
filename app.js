@@ -31,8 +31,8 @@ function lay(){
  <div class=fc><h4>ادویات</h4>${CATS.map(c=>`<a href="${cu(c)}">${c[1]}</a>`).join("")}<a href="${gu('diseases')}">بیماریاں اور علاج</a></div>
  <div class=fc><h4>معلومات</h4><a href="${gu('about')}">ہمارا تعارف</a><a href="${gu('terms')}">شرائط و ضوابط</a><a href="${gu('cart')}">میرا کارٹ</a></div>
  <div class=fc><h4>رابطہ</h4><a href="${wa("میں آپ سے رابطہ کرنا چاہتا ہوں")}" target=_blank>واٹس ایپ: <bdi dir=ltr>0311-1307530</bdi></a><span>ہفتہ تا جمعرات<br>صبح 9 تا شام 5 بجے</span></div></div>
- <div class=fp><span>💵 کیش آن ڈیلیوری</span><span>🚚 فری ہوم ڈیلیوری</span><span>🌿 100% ہربل</span></div><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div></footer><a class=fab href="${wa("میں اپنی صحت کے متعلق مشورہ کرنا چاہتا ہوں")}" target=_blank>💬 ابھی اپنی صحت کے متعلق مشورہ کریں</a><div id=toast></div>`);
- badge();search();
+ <div class=fp><span>💵 کیش آن ڈیلیوری</span><span>🚚 فری ہوم ڈیلیوری</span><span>🌿 100% ہربل</span></div><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div></footer><button type=button class=fab id=hf aria-label="اپنی صحت کے متعلق مشورہ کریں">اپنی صحت کے متعلق مشورہ کریں</button><div id=toast></div>`);
+ badge();search();hfInit();
  try{if(SITE_CODE&&!sessionStorage.getItem("pp")){sessionStorage.setItem("pp",1);setTimeout(popup,800)}}catch(e){}}
 function popup(){document.body.insertAdjacentHTML("beforeend",`<div class=ov id=pp><div class=pop><button class=cl onclick="$('#pp').remove()" aria-label="بند کریں">×</button><div style="font-size:2.4rem">🎁</div><b style="font-size:1.3rem;color:#1C352D">ہر آرڈر پر ${CODES[SITE_CODE].pct}% ڈسکاؤنٹ!</b><div>یہ کوڈ چیک آؤٹ پر لگائیں</div><div class=cd>${SITE_CODE}</div><button class="btn wa" id=cp>📋 کوڈ کاپی کریں</button></div></div>`);
  $("#cp").onclick=()=>{const d=()=>{$("#cp").textContent="✔ کاپی ہو گیا";setTimeout(()=>$("#pp")&&$("#pp").remove(),900)};
@@ -61,3 +61,99 @@ function reviewsSec(p){const r=p.r||[];if(!r.length)return"";const av=(r.reduce(
  return secHead("کسٹمرز کے فیڈبیک","اس پروڈکٹ کے بارے میں ہمارے کسٹمرز کی رائے")+`<div class=ag><b>${av}</b>${stars(5)}<span>${r.length} کسٹمرز کے تاثرات</span></div><div class=rvs>${r.map(x=>rvCard(x)).join("")}</div>`}
 function faqSec(){return secHead("زیادہ پوچھے جانے والے سوالات","آرڈر، ڈیلیوری اور ادائیگی کے بارے میں اکثر پوچھے گئے سوالات")+`<div class=faq>${FAQ.map(f=>`<div class=fq><button class=fqb onclick="fqt(this)"><span>${f[0]}</span><i></i></button><div class=fa><div><p>${f[1]}</p></div></div></div>`).join("")}</div>`}
 function fqt(b){const it=b.parentNode,on=it.classList.contains("on");$$(".fq.on").forEach(x=>x.classList.remove("on"));if(!on)it.classList.add("on")}
+
+/* ===== صحت کے مشورے کا بٹن اور تشخیصی فارم (مرد / خواتین / عمومی) ===== */
+const HY=["ہاں","نہیں"],HYS=["ہاں","نہیں","کبھی کبھی"],HYK=["ہاں","نہیں","کچھ کچھ"];
+const hf=(y,q,o,r,s)=>({y,q,o,r,s:s||q});
+const hfBasic=g=>["بنیادی معلومات",[hf("t","نام","اپنا مکمل نام لکھیں",1),hf("a","عمر","عمر سالوں میں",1),hf("p","موبائل نمبر","03XXXXXXXXX",1),hf("t","شہر","شہر کا نام",1),hf("t","پیشہ / عمومی مصروفیت","اپنا پیشہ یا عمومی مصروفیت لکھیں",0,"پیشہ")].concat(g?[hf("s","آپ کی جنس",["مرد","عورت"],1,"جنس")]:[])];
+const hfHealth=sl=>["عمومی صحت",[hf("s","جسم کیسا ہے؟",["دبلا پتلا","درمیانہ","موٹاپا"],0,"جسم"),hf("s","قد",["چھوٹا","نارمل","لمبا"]),hf("m","درج ذیل امراض میں سے مستقل کسی کی شکایت ہے؟",["نزلہ و زکام","کھانسی","سر درد","کمزوری / تھکاوٹ","شوگر","بلڈ پریشر","ہائی کولیسٹرول / ٹرائی گلیسرائیڈز","یورک ایسڈ","کوئی نہیں"],0,"مستقل شکایت"),hf("s","نیند کیسی ہے؟",sl,0,"نیند")]];
+const HF={
+m:{t:"مرد حضرات کا تشخیصی فارم",d:"براہِ کرم تمام معلومات درست اور مکمل درج کریں تاکہ آپ کے مرض کی بہتر تشخیص اور رہنمائی کی جا سکے۔",s:[
+ hfBasic(0),hfHealth(["صحیح آتی ہے","نیند صحیح نہیں آتی"]),
+ ["نیند، مزاج اور عادات",[hf("s","عموماً کتنے گھنٹے آرام کرتے ہیں؟",["4-6 گھنٹے","6-8 گھنٹے","8-10 گھنٹے"],0,"آرام کے گھنٹے"),hf("s","کیا ان دنوں کوئی پریشانی ہے؟",HYK,0,"پریشانی"),hf("m","درج ذیل میں سے کس کی عادت ہے؟",["چائے","کافی","سگریٹ","نسوار","تمام","کسی کی نہیں"],0,"عادات")]],
+ ["دل، سانس اور معدہ",[hf("s","معمول سے زیادہ محنت سے دل کی دھڑکن بڑھ جاتی ہے؟",HY,0,"محنت سے دھڑکن بڑھنا"),hf("s","چلنے یا سیڑھیاں چڑھنے سے سانس بے قابو ہو جاتی ہے؟",HY,0,"سانس بے قابو ہونا"),hf("s","عموماً کھٹے یا بدبودار ڈکار آتے ہیں؟",HY,0,"کھٹے/بدبودار ڈکار"),hf("s","بھوک کھل کر لگتی ہے؟",HY,0,"بھوک"),hf("s","سینہ میں جلن اور تیزابیت محسوس ہوتی ہے؟",HYS,0,"سینہ میں جلن/تیزابیت"),hf("s","مرغن کھانوں اور فاسٹ فوڈ کا شوق رکھتے ہیں؟",["ہاں اکثر","نہیں","کبھی کبھی"],0,"مرغن کھانے/فاسٹ فوڈ"),hf("s","کھانا دن میں کتنی مرتبہ کھاتے ہیں؟",["3 مرتبہ","2 مرتبہ"],0,"کھانا"),hf("s","قبض کی عمومی شکایت ہے؟",HY,0,"قبض")]],
+ ["پیشاب، آپریشن و خاندانی بیماری",[hf("s","پیشاب دن رات میں کتنی بار آتا ہے؟",["بار بار","بہت کم"],0,"پیشاب کی تعداد"),hf("s","پیشاب کی مقدار کتنی ہوتی ہے؟",["زیادہ","درمیان","کم"],0,"پیشاب کی مقدار"),hf("s","پیشاب کرتے ہوئے جلن ہوتی ہے یا نہیں؟",["ہوتی ہے","نہیں ہوتی"],0,"پیشاب میں جلن"),hf("m","درج ذیل میں سے کوئی سابقہ یا خاندانی مسئلہ ہو تو منتخب کریں",["آپریشن","خاندانی بیماری","کوئی نہیں"],0,"سابقہ/خاندانی مسئلہ"),hf("x","اگر ہوا تو کب اور کس کا، تفصیل لکھیں","تفصیل لکھیں",0,"تفصیل")]],
+ ["شادی شدہ حضرات کے لیے",[hf("s","شادی سے مطمئن ہیں؟",HYK,0,"شادی سے مطمئن"),hf("t","شادی کو کتنا عرصہ ہوا؟","عرصہ لکھیں",0,"شادی کو عرصہ"),hf("t","اولاد کتنی ہے؟","اولاد کی تعداد",0,"اولاد")]],
+ ["ضعفِ مردمی / مردانہ مسائل",[hf("m","عضو میں درج ذیل میں سے کوئی مسئلہ ہے؟",["ٹیڑھا پن","چھوٹا پن","کمزوری","کوئی نہیں"],0,"عضو کا مسئلہ"),hf("s","نفس میں سختی کی کیفیت کیا ہے؟",["بہت اچھی","اچھی","مناسب","بری","بالکل نہیں"],0,"نفس میں سختی"),hf("s","سرد پانی سے عضو سکڑتا ہے؟",HY,0,"سرد پانی سے سکڑنا"),hf("s","مادہ تولید (منی) کیسا ہے؟",["گاڑھا","پتلا"],0,"مادہ تولید"),hf("m","درج ذیل میں کوئی شکایت ہے؟",["احتلام","جنسی سرد مہری","کوئی نہیں"],0,"شکایت"),hf("s","عضو یا پٹھوں میں درد ہوتا ہے؟",HYS,0,"عضو/پٹھوں میں درد"),hf("s","کمر میں درد ہوتا ہے؟",HYS,0,"کمر درد"),hf("s","سرعتِ انزال (ٹائمنگ) کی شکایت ہے؟",HYS,0,"سرعتِ انزال"),hf("t","احتلام کتنے روز بعد ہوتا ہے؟","دن لکھیں",0,"احتلام کتنے روز بعد"),hf("s","پیشاب کے بعد قطرے آتے ہیں؟",["منی کے","پیشاب کے","کوئی نہیں"],0,"پیشاب کے بعد قطرے"),hf("s","کبھی مشت زنی کی ہے؟",HY,0,"مشت زنی"),hf("s","ہمبستری کے بعد بیوی کو شرمگاہ میں جلن ہوتی ہے؟",HY,0,"ہمبستری کے بعد بیوی کو جلن"),hf("x","مردانہ بیماری یا مرض کے بارے میں تفصیل سے لکھیں","اپنی علامات اور مسئلہ تفصیل سے لکھیں",0,"مرض کی تفصیل")]],
+ ["ضروری نوٹ برائے مریض",[hf("t","آپ کے خیال میں ایک ماہ کی ادویات اندازاً کتنی مالیت تک کی ہوں؟","رقم لکھیں",0,"ایک ماہ کی ادویات کا بجٹ"),hf("s","اگر آپ نے اپنا کوئی ٹیسٹ کروایا ہے",HY,0,"ٹیسٹ کروایا")]]]},
+f:{t:"خواتین کا تشخیصی فارم",d:"براہِ کرم تمام معلومات درست اور مکمل درج کریں تاکہ بہتر رہنمائی اور تشخیص کی جا سکے۔",s:[
+ hfBasic(0),hfHealth(["نیند صحیح آتی ہے","نیند نہیں آتی"]),
+ ["مزاج، عادات اور روزمرہ کیفیت",[hf("s","عموماً کتنے گھنٹے آرام کرتی ہیں؟",["4-6 گھنٹے","6-8 گھنٹے","8-10 گھنٹے"],0,"آرام کے گھنٹے"),hf("m","درج ذیل میں سے کس کی عادت ہے؟",["چائے","کافی","سگریٹ","نسوار","کسی کی نہیں"],0,"عادات"),hf("s","کیا غیر معمولی پریشانی یا ذہنی دباؤ ہے؟",["ہے","نہیں"],0,"پریشانی/ذہنی دباؤ"),hf("x","اگر کوئی ذہنی پریشانی، صدمہ یا گھبراہٹ ہو تو تفصیل لکھیں","تفصیل لکھیں",0,"پریشانی کی تفصیل")]],
+ ["معدہ، بھوک اور ہاضمہ",[hf("s","بھوک کھل کر لگتی ہے؟",HYS,0,"بھوک"),hf("s","سینہ میں جلن یا تیزابیت محسوس ہوتی ہے؟",HYS,0,"سینہ میں جلن/تیزابیت"),hf("s","مرغن کھانوں یا فاسٹ فوڈ کا شوق ہے؟",["ہاں اکثر","نہیں","کبھی کبھی"],0,"مرغن کھانے/فاسٹ فوڈ"),hf("s","دن میں کتنی مرتبہ کھانا کھاتی ہیں؟",["2 مرتبہ","3 مرتبہ"],0,"کھانا"),hf("s","قبض کی شکایت ہے؟",["ہے","نہیں"],0,"قبض")]],
+ ["خواتین کے مخصوص سوالات",[hf("s","کیا ایام صحیح آتے ہیں؟",HY,0,"ایام صحیح آتے ہیں"),hf("s","دورانِ ایام درد رہتا ہے؟",HYS,0,"دورانِ ایام درد"),hf("s","کمر یا پیڑو میں درد رہتا ہے؟",HYS,0,"کمر/پیڑو میں درد"),hf("t","ایام کتنے دن رہتے ہیں؟","مثلاً 5 دن",0,"ایام کے دن"),hf("t","ایام کے خون کا رنگ","رنگ لکھیں",0,"ایام کے خون کا رنگ"),hf("s","کیا لیکوریا / سفید پانی کی شکایت ہے؟",HYS,0,"لیکوریا/سفید پانی"),hf("s","کیا غیر معمولی کمزوری محسوس ہوتی ہے؟",HYS,0,"غیر معمولی کمزوری"),hf("x","اپنی خواتین سے متعلق بیماری یا مسئلہ تفصیل سے لکھیں","تفصیل لکھیں",0,"مسئلے کی تفصیل")]],
+ ["شادی شدہ خواتین کے لیے",[hf("s","کیا آپ شادی شدہ ہیں؟",HY,0,"شادی شدہ"),hf("s","شادی سے مطمئن ہیں؟",HYK,0,"شادی سے مطمئن"),hf("t","شادی کو کتنا عرصہ ہوا؟","عرصہ لکھیں",0,"شادی کو عرصہ"),hf("t","اولاد کتنی ہے؟","اولاد کی تعداد",0,"اولاد"),hf("t","سب سے چھوٹے بچے کی عمر کتنی ہے؟","عمر لکھیں",0,"سب سے چھوٹے بچے کی عمر")]],
+ ["خاندانی بیماری اور رپورٹس",[hf("m","درج ذیل میں سے اگر کوئی مسئلہ ہوا ہو؟",["آپریشن","خاندانی بیماری","کوئی نہیں"],0,"سابقہ/خاندانی مسئلہ"),hf("x","اگر ہوا تو کب اور کس کا، تفصیل لکھیں","کب ہوا، کس کا تھا، اور مکمل تفصیل لکھیں",0,"تفصیل"),hf("t","آپ کے خیال میں ایک ماہ کی ادویات اندازاً کتنی مالیت تک کی ہوں؟","رقم لکھیں",0,"ایک ماہ کی ادویات کا بجٹ"),hf("s","کوئی لیبارٹری سے ٹیسٹ کروایا ہے؟",HY,0,"لیبارٹری ٹیسٹ")]]]},
+g:{t:"عمومی تشخیصی فارم",d:"براہِ کرم تمام معلومات درست اور مکمل درج کریں تاکہ آپ کے مرض کی بہتر تشخیص اور رہنمائی کی جا سکے۔",s:[
+ hfBasic(1),hfHealth(["صحیح آتی ہے","صحیح نہیں آتی"]),
+ ["نیند، مزاج اور عادات",[hf("s","عموماً کتنے گھنٹے آرام کرتے ہیں؟",["4-6 گھنٹے","6-8 گھنٹے","8-10 گھنٹے"],0,"آرام کے گھنٹے"),hf("s","کیا ان دنوں کوئی پریشانی یا ذہنی دباؤ ہے؟",HYK,0,"پریشانی/ذہنی دباؤ"),hf("m","درج ذیل میں سے کس کی عادت ہے؟",["چائے","کافی","سگریٹ","نسوار","تمام","کسی کی نہیں"],0,"عادات")]],
+ ["دل، سانس اور معدہ",[hf("s","معمول سے زیادہ محنت سے دل کی دھڑکن بڑھ جاتی ہے؟",HY,0,"محنت سے دھڑکن بڑھنا"),hf("s","چلنے یا سیڑھیاں چڑھنے سے سانس بے قابو ہو جاتی ہے؟",HY,0,"سانس بے قابو ہونا"),hf("s","عموماً کھٹے یا بدبودار ڈکار آتے ہیں؟",HY,0,"کھٹے/بدبودار ڈکار"),hf("s","بھوک کھل کر لگتی ہے؟",HYS,0,"بھوک"),hf("s","سینہ میں جلن اور تیزابیت محسوس ہوتی ہے؟",HYS,0,"سینہ میں جلن/تیزابیت"),hf("s","مرغن کھانوں اور فاسٹ فوڈ کا شوق ہے؟",["ہاں اکثر","نہیں","کبھی کبھی"],0,"مرغن کھانے/فاسٹ فوڈ"),hf("s","کھانا دن میں کتنی مرتبہ کھاتے ہیں؟",["3 مرتبہ","2 مرتبہ"],0,"کھانا"),hf("s","قبض کی عمومی شکایت ہے؟",HY,0,"قبض")]],
+ ["پیشاب، آپریشن و خاندانی بیماری",[hf("s","پیشاب دن رات میں کتنی بار آتا ہے؟",["بار بار","بہت کم"],0,"پیشاب کی تعداد"),hf("s","پیشاب کی مقدار کتنی ہوتی ہے؟",["زیادہ","درمیان","کم"],0,"پیشاب کی مقدار"),hf("s","پیشاب کرتے ہوئے جلن ہوتی ہے یا نہیں؟",["ہوتی ہے","نہیں ہوتی"],0,"پیشاب میں جلن"),hf("m","درج ذیل میں سے کوئی سابقہ یا خاندانی مسئلہ ہو تو منتخب کریں",["آپریشن","خاندانی بیماری","کوئی نہیں"],0,"سابقہ/خاندانی مسئلہ"),hf("x","اگر ہوا تو کب اور کس کا، تفصیل لکھیں","تفصیل لکھیں",0,"تفصیل")]],
+ ["مرض کی تفصیل",[hf("x","اپنے مرض یا مسئلے کے متعلق تفصیل سے بتائیں","اپنی علامات اور مسئلہ تفصیل سے لکھیں",1,"مرض کی تفصیل")]],
+ ["ضروری نوٹ برائے مریض",[hf("t","آپ کے خیال میں ایک ماہ کی ادویات اندازاً کتنی مالیت تک کی ہوں؟","رقم لکھیں",0,"ایک ماہ کی ادویات کا بجٹ"),hf("s","اگر آپ نے اپنا کوئی ٹیسٹ کروایا ہے",HY,0,"ٹیسٹ کروایا")]]]}};
+const HFM=[["m","👨","مردانہ صحت کے متعلق مشورہ کرنا ہے"],["f","👩","عورتوں کے جنسی امراض کے متعلق مشورہ کرنا ہے"],["g","🩺","عام کسی بھی مرض کے بارے میں مشورہ کرنا ہے"]];
+let HFS=null;
+const hfD=s=>String(s).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);
+const hfPh=s=>{let v=hfD(s).replace(/[\s\-()]/g,"");if(v.startsWith("+92"))v="0"+v.slice(3);else if(/^92\d{10}$/.test(v))v="0"+v.slice(2);return v};
+function hfVal(S){/* لازمی خانوں کی جانچ: غلط خانوں کی فہرست (index) واپس کرتا ہے */
+ const bad=[];S.f.forEach((f,i)=>{const v=S.a[i],e=v==null||(Array.isArray(v)?!v.length:!String(v).trim());
+  if(f.y=="p"){if(!/^03\d{9}$/.test(hfPh(v||"")))bad.push(i)}
+  else if(f.y=="a"){const n=Number(hfD(v||"").trim());if(!(n>=1&&n<=120))bad.push(i)}
+  else if(f.r&&e)bad.push(i)});return bad}
+function hfMsg(S){const F=HF[S.k];let n=0,m="السلام علیکم! میں نے *"+F.t+"* مکمل کیا ہے:\n";
+ F.s.forEach(sc=>{const L=[];sc[1].forEach(f=>{const i=n++;let v=S.a[i];if(v==null||(Array.isArray(v)?!v.length:!String(v).trim()))return;
+  if(f.y=="p")v=hfPh(v);else if(f.y=="a")v=hfD(v).trim();else if(Array.isArray(v))v=v.join("، ");else v=String(v).trim();L.push(f.s+": "+v)});
+  if(L.length)m+="\n*"+sc[0]+"*\n"+L.join("\n")+"\n"});return m.trim()}
+function hfCss(){if($("#hfs"))return;document.head.insertAdjacentHTML("beforeend",`<style id=hfs>
+.fab{right:14px;bottom:22px;display:flex;align-items:center;gap:6px;padding:3px 16px;font:inherit;font-size:.92rem;line-height:1.9;cursor:pointer;background:linear-gradient(135deg,#1C352D,#2f6b4f);color:#fff;border:2px solid var(--gold);box-shadow:0 6px 18px #0005}
+.hfo{position:fixed;inset:0;background:#000b;z-index:120;display:flex;align-items:flex-end;justify-content:center}
+.hfx{background:#faf8f1;width:100%;max-width:560px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;border-radius:22px 22px 0 0;border-top:5px solid var(--l)}
+@media(min-width:700px){.hfo{align-items:center}.hfx{border-radius:22px}}
+.hfh{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--g);color:#fff}
+.hfh b{flex:1;font-weight:400;font-size:1.05rem;text-align:center}
+.hfh button{background:none;border:0;color:#fff;font:inherit;font-size:1.5rem;cursor:pointer;width:38px;line-height:1.6}
+.hfy{overflow:auto;padding:10px 14px 20px;-webkit-overflow-scrolling:touch}
+.hfi{color:#4d5b52;font-size:.92rem;text-align:center;margin:2px 0 8px;line-height:2}
+.hfm{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:#fff;border:2px solid #dbe6c9;border-radius:16px;padding:6px 14px;margin:8px 0;font:inherit;font-size:1rem;line-height:1.9;color:var(--g);cursor:pointer}
+.hfm i{font-style:normal;font-size:1.8rem}
+.hfm:hover,.hfm:active{border-color:var(--l);background:#f6f9ef}
+.hfs2 h4{display:inline-block;margin:16px 0 4px;color:var(--g);font-weight:400;font-size:1.1rem;border-bottom:2px solid var(--gold)}
+.hff{margin:4px 0}.hff label{display:block;font-size:.95rem;line-height:1.9;color:#1F2A24}.hff label i{color:#c0392b;font-style:normal}
+.hff input,.hff textarea{width:100%;box-sizing:border-box;border:2px solid #dbe6c9;background:#fff;border-radius:12px;padding:4px 12px;margin:0;font:inherit;font-size:.95rem;line-height:1.9;outline:0}
+.hff input[type=tel]{direction:ltr;text-align:right}
+.hff input:focus,.hff textarea:focus{border-color:var(--l)}
+.hcs{display:flex;flex-wrap:wrap;gap:6px;padding:2px;border:2px solid transparent;border-radius:14px}
+.hc{font:inherit;font-size:.92rem;line-height:1.8;padding:0 14px;border-radius:50px;border:2px solid #dbe6c9;background:#fff;color:var(--g);cursor:pointer}
+.hc.on{background:var(--g);color:#fff;border-color:var(--g)}
+.hff .em{display:none;color:#c0392b;font-size:.85rem;line-height:1.8}
+.hff.er .em{display:block}.hff.er input,.hff.er textarea,.hff.er .hcs{border-color:#c0392b}
+.hsub{display:block;width:100%;margin-top:18px;border:0;border-radius:50px;background:var(--wa);color:#fff;font:700 1.05rem/1.9 'Noto Nastaliq Urdu',serif;padding:6px 14px;cursor:pointer}
+.hnt{font-size:.82rem;color:#6b7a6f;text-align:center;line-height:1.9;margin:6px 0 0}
+</style>`)}
+function hfInit(){hfCss();const b=$("#hf");if(b)b.onclick=hfOpen}
+function hfClose(){const o=$("#hfo");if(o)o.remove();document.body.style.overflow="";HFS=null}
+function hfOpen(){hfClose();document.body.style.overflow="hidden";
+ document.body.insertAdjacentHTML("beforeend",`<div class=hfo id=hfo><div class=hfx role=dialog aria-modal=true><div class=hfh><button type=button id=hfb aria-label="واپس">→</button><b id=hft></b><button type=button id=hfc aria-label="بند کریں">×</button></div><div class=hfy id=hfy></div></div></div>`);
+ const o=$("#hfo");$("#hfc").onclick=hfClose;$("#hfb").onclick=()=>{if(HFS&&Object.keys(HFS.a).length&&!confirm("بھری ہوئی معلومات مٹ جائیں گی۔ واپس جائیں؟"))return;hfMenu()};
+ o.addEventListener("click",e=>{if(e.target.id=="hfo"&&!HFS)hfClose()});
+ const y=$("#hfy");
+ y.addEventListener("click",e=>{const m=e.target.closest("[data-k]");if(m){hfForm(m.dataset.k);return}
+  const c=e.target.closest(".hc");if(c&&HFS){const w=c.parentNode,i=+w.dataset.i,v=c.dataset.v,ex=v=="کوئی نہیں"||v=="کسی کی نہیں";
+   if(w.dataset.y=="s"){HFS.a[i]=HFS.a[i]==v?"":v;$$(".hc",w).forEach(x=>x.classList.toggle("on",x.dataset.v==HFS.a[i]))}
+   else{let a=HFS.a[i]||[];if(a.includes(v))a=a.filter(x=>x!=v);else a=ex?[v]:a.filter(x=>x!="کوئی نہیں"&&x!="کسی کی نہیں").concat(v);HFS.a[i]=a;$$(".hc",w).forEach(x=>x.classList.toggle("on",a.includes(x.dataset.v)))}
+   $("#hff"+i).classList.remove("er");return}
+  if(e.target.id=="hsub")hfSend()});
+ y.addEventListener("input",e=>{const t=e.target;if(t.dataset&&t.dataset.i!=null&&HFS){HFS.a[+t.dataset.i]=t.value;$("#hff"+t.dataset.i).classList.remove("er")}});
+ hfMenu()}
+function hfMenu(){HFS=null;$("#hfb").style.visibility="hidden";$("#hft").textContent="صحت کے متعلق مشورہ";$("#hfy").scrollTop=0;
+ $("#hfy").innerHTML=`<div class=hfi>آپ کس بارے میں مشورہ کرنا چاہتے ہیں؟ ایک آپشن منتخب کریں</div>`+HFM.map(m=>`<button type=button class=hfm data-k=${m[0]}><i>${m[1]}</i><span>${m[2]}</span></button>`).join("")}
+function hfForm(k){const F=HF[k],fl=[];HFS={k,a:{},f:fl};$("#hfb").style.visibility="visible";$("#hft").textContent=F.t;
+ $("#hfy").innerHTML=`<div class=hfi>${F.d}</div>`+F.s.map(sc=>`<div class=hfs2><h4>${sc[0]}</h4>`+sc[1].map(f=>{const i=fl.push(f)-1;let c;
+  if(f.y=="s"||f.y=="m")c=`<div class=hcs data-i=${i} data-y=${f.y}>${f.o.map(v=>`<button type=button class=hc data-v="${v}">${v}</button>`).join("")}</div>`;
+  else if(f.y=="x")c=`<textarea data-i=${i} rows=3 placeholder="${f.o}"></textarea>`;
+  else c=`<input data-i=${i} type=${f.y=="t"?"text":"tel"} ${f.y=="t"?"":"inputmode=numeric"} placeholder="${f.o}" autocomplete=off>`;
+  return`<div class=hff id=hff${i}><label>${f.q}${f.r?" <i>*</i>":""}</label>${c}<div class=em>${f.y=="p"?"درست موبائل نمبر لکھیں (03XXXXXXXXX)":f.y=="a"?"درست عمر لکھیں":"یہ خانہ لازمی ہے"}</div></div>`}).join("")+`</div>`).join("")+`<button type=button class=hsub id=hsub>✅ سبمٹ کریں</button><div class=hnt>سبمٹ دبانے پر واٹس ایپ کھلے گا جس میں آپ کی ساری معلومات پہلے سے لکھی ہوں گی، بس "سینڈ" دبا دیں۔</div>`;
+ $("#hfy").scrollTop=0}
+function hfSend(){if(!HFS)return;const bad=hfVal(HFS);$$(".hff.er").forEach(x=>x.classList.remove("er"));
+ if(bad.length){bad.forEach(i=>$("#hff"+i).classList.add("er"));$("#hff"+bad[0]).scrollIntoView({behavior:"smooth",block:"center"});toast("براہِ کرم لال نشان والے خانے درست کریں");return}
+ const msg=hfMsg(HFS);window.open(wa(msg),"_blank");hfClose();toast("✔ واٹس ایپ کھل رہا ہے، سینڈ دبا دیں")}
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#hfo"))hfClose()});
