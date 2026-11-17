@@ -56,7 +56,7 @@ function nf(){document.title='صفحہ نہیں ملا | عارفی دارالش
 function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.title=PP.n;let m=document.querySelector('meta[name=description]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=PP.md||(PP.n+' — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔');pdraw()}
 function pdraw(){const p=PP,pr=p.v[vi][1],lb=p.v[vi][0];
 $('#m').innerHTML=`<div class=box style=text-align:center>${p.img?'<img src='+p.img+' alt="" style="width:100%;max-width:360px;border-radius:14px">':"<div style='background:var(--c) url(logo.webp) center/40% no-repeat;aspect-ratio:16/10;border-radius:14px'></div>"}<h1 style='font-weight:400;color:var(--g);font-size:1.6rem'>${p.n}</h1>
-${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+v[0]+(v[1]?' — '+fmt(v[1]):'')+'</button>').join('')+'</div>':''}
+${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+(v[0]||(v[1]?fmt(v[1]):''))+'</button>').join('')+'</div>':''}
 ${pr?'<p><span class=big>'+fmt(pr)+'</span></p><div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
 <p><a class='btn wa' target=_blank href="${wa('میں "'+p.n+'" '+(lb?'('+lb+') ':'')+'× '+q+(pr?' آرڈر کرنا چاہتا ہوں۔ قیمت: '+fmt(pr*q):' کے بارے میں معلومات چاہتا ہوں'))}">واٹس ایپ پر ابھی آرڈر کریں</a></p>
 ${pr?'<button class="btn lt en" onclick="add(PP.id,vi,q)">🛒 Add to Cart</button>':''}</div>
