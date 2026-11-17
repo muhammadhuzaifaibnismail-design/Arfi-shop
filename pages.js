@@ -2,29 +2,36 @@
 lay();
 let PP=null,vi=0,q=1,code=null,pay='cod';
 const HRV=typeof HOME_RV!=='undefined'?HOME_RV:[];
+/* تمام فیڈبیک: ہوم پیج والے + ہر پروڈکٹ والے (پروڈکٹ کا نام ساتھ) — خود بخود جمع ہوتے ہیں */
+const ARV=()=>[...HRV.map(r=>[r,r.p]),...P.flatMap(p=>(p.r||[]).map(r=>[r,p.n]))];
 function route(){
  const Q=new URLSearchParams(location.search);let rel;
  try{rel=decodeURIComponent(location.pathname)}catch(e){rel=location.pathname}
  if(rel+'/'==BASE)rel='';else if(rel.startsWith(BASE))rel=rel.slice(BASE.length);else rel=rel.replace(/^\//,'');
  rel=rel.replace(/(^|\/)index\.html$/,'').replace(/\/+$/,'');
- const F={'':['home'],'product.html':['prod',Q.get('id')],'category.html':['cat',Q.get('c')||'all'],'diseases.html':['dis'],'about.html':['about'],'terms.html':['terms'],'cart.html':['cart']};
+ const F={'':['home'],'product.html':['prod',Q.get('id')],'category.html':['cat',Q.get('c')||'all'],'diseases.html':['dis'],'about.html':['about'],'terms.html':['terms'],'cart.html':['cart'],'reviews.html':['rev'],'reviews':['rev']};
  if(F[rel])return F[rel];
  const c=CATS.find(x=>x[3]==rel);if(c)return['cat',c[0]];
  for(const k of ['diseases','about','terms','cart'])if(PG[k]==rel)return[{diseases:'dis'}[k]||k];
  const p=P.find(x=>(x.s||x.id)==rel)||P.find(x=>x.id==rel);
  return p?['prod',p.id]:['nf'];}
 const R=route();
-({home,cat,dis,about,terms,cart,prod,nf})[R[0]](R[1]);
+({home,cat,dis,about,terms,cart,prod,nf,rev})[R[0]](R[1]);
 
 function home(){
  let t=P.map((p,i)=>[p,(p.r||[]).length,i]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).slice(0,6).map(x=>x[0]);
  if(!t.length)t=['akseer-arfi','honey','shah-akbari'].map(gp).filter(Boolean);
  $('#m').innerHTML=`<div class=sl>${[1,2,3,4].map(i=>'<img src=s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
-<h2>ہماری ادویات</h2><div class=grid>${CATS.map(c=>`<a class=cat href="${cu(c)}"><i>${c[2]}</i>${c[1]}</a>`).join('')}</div>
+${secHead('ہماری ادویات')}<div class=grid>${CATS.map(c=>`<a class=cat href="${cu(c)}"><i>${c[2]}</i>${c[1]}</a>`).join('')}</div>
 <a class=dis href="${gu('diseases')}">بیماریاں اور ان کے علاج</a>
 ${secHead('ٹاپ ریٹڈ پروڈکٹس','وہ ادویات جنہیں ہمارے کسٹمرز نے سب سے زیادہ پسند کیا')}<div class=grid>${t.map(p=>card(p,1)).join('')}</div>
-${HRV.length?secHead('ہیپی کسٹمرز','ہمارے خوش کسٹمرز کے فیڈبیک')+'<div class=rvs>'+HRV.map(r=>rvCard(r,r.p)).join('')+'</div>':''}`;
+${hrv()}`;
  let k=0;const s=$$('.sl img');setInterval(()=>{s[k].classList.remove('on');k=(k+1)%s.length;s[k].classList.add('on')},2500)}
+
+function hrv(){const A=ARV();if(!A.length)return'';const sh=HRV.length?HRV.slice(0,3).map(r=>[r,r.p]):A.slice(0,3);
+ return secHead('ہیپی کسٹمرز','ہمارے خوش کسٹمرز کے فیڈبیک')+'<div class=rvs>'+sh.map(x=>rvCard(x[0],x[1])).join('')+'</div>'+(A.length>sh.length?'<p style="text-align:center;margin:14px"><a class="btn lt" style="display:inline-block;width:auto;padding:8px 28px" href="'+BS()+'reviews">تمام کسٹمرز کے فیڈبیک دیکھیں</a></p>':'')}
+function rev(){document.title='ہیپی کسٹمرز | عارفی دارالشفاء';const A=ARV();
+ $('#m').innerHTML=secHead('ہیپی کسٹمرز','ہمارے خوش کسٹمرز کے فیڈبیک')+(A.length?'<div class=rvs>'+A.map(x=>rvCard(x[0],x[1])).join('')+'</div>':'<div class=box style=text-align:center>ابھی کوئی فیڈبیک موجود نہیں۔</div>')}
 
 function cat(c){const ct=CATS.find(x=>x[0]==c)||CATS[0];c=ct[0];
  document.title=ct[1];const L=c=='all'?P:P.filter(p=>p.c.includes(c));

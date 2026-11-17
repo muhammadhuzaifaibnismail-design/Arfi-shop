@@ -10,7 +10,7 @@ async function gh(path,m="GET",body){const r=await fetch(`https://api.github.com
 async function load(){const f=await gh("products.js");sha=f.sha;L=JSON.parse(u8(f.content).replace(/^[^=]*=/,"").replace(/;\s*$/,""))}
 async function save(msg){const r=await gh("products.js","PUT",{message:msg,branch:cfg.br,sha,content:b8("const PRODUCTS="+JSON.stringify(L,null,1)+";\n")});sha=r.content.sha}
 
-const RES=["admin","cart","all-medicine","children-medicine","mens-medicine","womens-medicine","stomach-medicine","skin-medicine","diseases-and-treatments","introduction","terms-and-conditions"],esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const RES=["admin","cart","all-medicine","children-medicine","mens-medicine","womens-medicine","stomach-medicine","skin-medicine","diseases-and-treatments","introduction","terms-and-conditions","reviews"],esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 let RT=[],STUB=null,H=[],hsha="",ER=-1,HE=-1,RMI=false;
 async function stubOf(name,md){if(!STUB){const f=await gh("product.html");STUB=u8(f.content)}return STUB.replace(/<title>[^<]*<\/title>/,"<title>"+esc(name)+" | عارفی دارالشفاء</title><meta name=description content=\""+esc(md||(name+" — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔"))+"\">")}
 async function ensureStub(slug,name,md){if(!slug)return;const path=slug+"/index.html";let o;try{o=(await gh(path)).sha}catch(e){}
