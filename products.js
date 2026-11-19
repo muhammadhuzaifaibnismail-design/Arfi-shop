@@ -647,12 +647,13 @@ const PRODUCTS=[
   "s": "arfi-timing-course",
   "r": [
    {
-    "n": "محمد قاسم سولنگی",
+    "n": "سراج",
     "g": "m",
     "s": 5,
-    "t": "السلام علیکم سر جی کچھ دن پہلے میں نے آپ سے ٹائمنگ والے کیپسول منگوائے تھے اس کا بہت اچھا رزلٹ ملا ہے پہلے بھی میں نے دوسری دوا خانوں کے کیپسول کھائے تھے ان کا رزلٹ اتنا نہیں ملا جتنا اس کا ملا ہے یہ بہت بہترین اچھی چیز ہے۔"
+    "t": "Assalamualekum\n\nHuzaifa bhi Allah Pak Apko Jaza e khair de.\n\nKuch time pehle jb me ne apni shadi ka suna to kafi ziya mayous or pareshan tha q k jawani ki ghaltiyou ki waja se me is qabil nahi tha..\n\nPhir jb ap se rabta huwa tafseel k sath or jo ap ka tilla khas ka course use kiya to umeed huwi ki nafs me kafi change a gya hai.\n\nIs k bad jb timming course mangwaya apse to is se kafi farq mehsoos huwa 1 month k use se..\n\nAbhi timming bhi behtar hai pehle se or INSHALLAH ye course khatam hote hi ye masla bhi khatam ho jaew ga..\n\nAj kal k dor me logo ka hikmat se bharosa khatam ho chuka hai q k khalis tabeeb nahi mile..\n\nAllah pak apko JAZA E KHAIR de k apne mera masla hal kar diya.."
    }
-  ]
+  ],
+  "t": ""
  },
  {
   "id": "bawaseer",
