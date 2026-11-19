@@ -659,8 +659,8 @@ const PRODUCTS=[
   ],
   "v": [
    [
-    "",
-    0
+    "پیکنگ برائے 90 دن",
+    13500
    ]
   ],
   "s": "arfi-timing-course",
@@ -672,7 +672,9 @@ const PRODUCTS=[
     "t": "Assalamualekum\n\nHuzaifa bhi Allah Pak Apko Jaza e khair de.\n\nKuch time pehle jb me ne apni shadi ka suna to kafi ziya mayous or pareshan tha q k jawani ki ghaltiyou ki waja se me is qabil nahi tha..\n\nPhir jb ap se rabta huwa tafseel k sath or jo ap ka tilla khas ka course use kiya to umeed huwi ki nafs me kafi change a gya hai.\n\nIs k bad jb timming course mangwaya apse to is se kafi farq mehsoos huwa 1 month k use se..\n\nAbhi timming bhi behtar hai pehle se or INSHALLAH ye course khatam hote hi ye masla bhi khatam ho jaew ga..\n\nAj kal k dor me logo ka hikmat se bharosa khatam ho chuka hai q k khalis tabeeb nahi mile..\n\nAllah pak apko JAZA E KHAIR de k apne mera masla hal kar diya.."
    }
   ],
-  "t": ""
+  "t": "عارفی دارالشفاء میں آنے والے مرد حضرات کو تین اہم مسائل کا سامنا ہوتا ہے:\n\n1. **منی کا پتلا ہونا۔**\n2. **ٹائمنگ کی کمی یا مکمل فقدان۔**\n3. **جنسی تعلق کے فوراً بعد ڈسچارج ہونا۔**\n\nان مسائل کے حل کے لیے ہمارے ماہرین نے **عارفی ٹائمنگ کورس** تیار کیا ہے، جو آپ کی جنسی صحت کو بہتر بناتا ہے اور اعتماد میں اضافہ کرتا ہے۔\n\n# کورس کے نمایاں فوائد:\n\n✅ **منی کو گاڑھا کرتا ہے** اور ٹائمنگ میں 15 منٹ کا اضافہ کرتا ہے، جو ہر مرد کی خواہش ہوتی ہے۔\n\n✅ **جریان و احتلام کے خلاف اکسیر نسخہ** — قطروں کی صورت میں پہلی خوراک سے ہی مؤثر نتائج حاصل کریں۔\n\n✅ **جراثیم کی کمی کو دور کرتا ہے** — بے اولاد جوڑوں کے لیے کسی نعمت سے کم نہیں۔\n\n✅ **مذی کے قطروں سے نجات** — فون یا گفتگو کے دوران مذی کا آنا ایک عام مسئلہ ہے، جس سے اس کورس کے چند دن کے استعمال سے نجات حاصل کی جا سکتی ہے۔\n\n✅ **قلت منی کو ختم کرتا ہے** — اگر آپ کو شہوت کی کمی یا منی کی قلت کا سامنا ہے، تو صرف ایک ماہ کے استعمال سے آپ کو حیرت انگیز نتائج ملیں گے۔\n\n**عارفی ٹائمنگ کورس** — ایک مکمل حل جو آپ کی زندگی میں نئی توانائی اور خوشیاں لاتا ہے!",
+  "md": "عارفی ٹائمنگ کورس مردانہ صحت، ٹائمنگ کی کمی، جریان، احتلام، قلت منی اور دیگر ازدواجی مسائل کے لیے پیش کردہ خصوصی کورس ہے۔",
+  "img": "timing-mwnw2ed2.jpg"
  },
  {
   "id": "bawaseer",
