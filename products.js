@@ -535,8 +535,8 @@ const PRODUCTS=[
   ],
   "v": [
    [
-    "",
-    0
+    "10 ملی لیٹر",
+    1800
    ]
   ],
   "s": "talai-khas",
@@ -545,10 +545,10 @@ const PRODUCTS=[
     "n": "امیر معاویہ",
     "g": "m",
     "s": 5,
-    "t": "حکیم صاحب طلاء خاص آپ سے منگوایا تھا اسکا کافی فائدہ ہوا الحمدللہ۔\n\nاور موٹاپے کا کورس منگوایا تھا اسکا بھی الحمدللہ بہت فائدہ ہوا۔\n\nالحمدللہ رب العالمین آپ کو اپنی جناب سے جزائے خیر عطا فرمائے۔"
+    "t": "حکیم صاحب طلاء خاص آپ سے منگوایا تھا اسکا کافی فائدہ ہوا الحمدللہ۔\n\nالحمدللہ رب العالمین۔ اللّٰہ آپ کو اپنی جناب سے جزائے خیر عطا فرمائے۔"
    },
    {
-    "n": "عمران",
+    "n": "حافظ اقبال",
     "g": "m",
     "s": 5,
     "t": "Huzifa mery peyary bhai tilla ap ka istmal kr rha hon.\n\nMasha Allah bhut faida dy rha hy 7 din men bhut hi zabrdast rezult diya hy tilla khaas ny nafs men sakhti or motai bhe thek thak aa rhe hy.\n\nBhut dil sy duaen niklti hen ap ky ley duniya men bhut hi kam Hakeem hen ap jysy jo logon ki eyman dari sy khidmat kr rhy hen, Allah pak ap ko sehat or tandrusti wali lambi zendgi ata farmay aameen ta ky ap logon ki mazeed khidmat kr saken.\n\nAllah pak ap ky kaam men ilm men amal men bhut barkat ata farmay aameen summa aameen.\n\nYakeen kren huzaifa Bhai bhut hakeemon or doctor sy ilaj krwaya hy kheen sy fark nhe pra ab yakeen aya hy ky hikmat men cheezen mojod hen lykin hokama hazrat marezon ko ayk number dawai ni dety 2 numbri kr ky pysy lottay rehty hen awam sy, bhut dil kosh or motmain hy alhamdulillah ap ky ilaj sy Allah pak ap ko bhut kamyabeyan dy aameen."
@@ -557,9 +557,12 @@ const PRODUCTS=[
     "n": "سراج",
     "g": "m",
     "s": 5,
-    "t": "Assalamualekum\n\nHuzaifa bhi Allah Pak Apko Jaza e khair de.\n\nKuch time pehle jb me ne apni shadi ka suna to kafi ziya mayous or pareshan tha q k jawani ki ghaltiyou ki waja se me is qabil nahi tha..\n\nPhir jb ap se rabta huwa tafseel k sath or jo ap ne khas ka course use kiya to umeed huwi ki nafs me kafi change a gya hai.\n\nIs k bad jb timming course mangwaya apse to is se kafi farq mehsoos huwa 1 month k use se..\n\nAbhi timming bhi behtar hai pehle se or INSHALLAH ye course khatam hote hi ye masla bhi khatam ho jaew ga..\n\nAj kal k dor me logo ka hikmat se bharosa khatam ho chuka hai q k khalis tabeeb nahi mile..\n\nAllah pak apko JAZA E KHAIR de k apne mera masla hal kar diya.."
+    "t": "Assalamualekum\n\nHuzaifa bhi Allah Pak Apko Jaza e khair de.\n\nKuch time pehle jb me ne apni shadi ka suna to kafi ziya mayous or pareshan tha q k jawani ki ghaltiyou ki waja se me is qabil nahi tha..\n\nPhir jb ap se rabta huwa tafseel k sath or jo ap ka tilla khas ka course use kiya to umeed huwi ki nafs me kafi change a gya hai.\n\nIs k bad jb timming course mangwaya apse to is se kafi farq mehsoos huwa 1 month k use se..\n\nAbhi timming bhi behtar hai pehle se or INSHALLAH ye course khatam hote hi ye masla bhi khatam ho jaew ga..\n\nAj kal k dor me logo ka hikmat se bharosa khatam ho chuka hai q k khalis tabeeb nahi mile..\n\nAllah pak apko JAZA E KHAIR de k apne mera masla hal kar diya.."
    }
-  ]
+  ],
+  "t": "# عضو خاص کی جملہ بیماریوں اور نامرد حضرات کیلئے بیش قیمت روغن\n\nسالہا سال سے لوگ ہمارے ادارے سے دواؤں کے ذریعے شفایاب ہورہے ہیں مریضوں کے اعتماد پر ادارہ جو اپنی پیٹنٹ ادویات تھیں ان کو منظر عام پر لے آیا۔ ان خاص دواؤں میں ایک ریسرچ **طلائے خاص** بھی ہے۔ یہ **طلائے خاص** میرے والد حکیم محمد اسماعیل کی عرصہ دراز کی معالجاتی تجربات کا نچوڑ ہے۔\n\n# شادی سے انکار میری مجبوری ہے:\n\nاس موضوع پر کئی میسج آئے، کئی مریضوں نے آکر حالات بتائے، ہر میسج، ہر مریض ایک دوسرے سے زیادہ دکھی اور شرمندہ تھا۔جن کا نچوڑ یہی تھا کہ انسان زندگی میں کس قدر بے بس ہو جاتا ہے۔ اس کا احساس اسے اس وقت ہوتا ہے کہ نہ وہ کسی سے بات کر سکتا ہے نہ وہ کسی کی بات مان سکتا ہے۔ بچپن کی غلط کاریاں، فحش فلمیں، غلط دوستوں کی محافل کی وجہ سے دیگر برائیوں میں گرتا چلا جاتا ہے۔ اسے احساس اس وقت ہوتا ہے جب وہ اپنا سب کچھ کھو بیٹھتا ہے، احساس کمتری کا شکار ہوتا ہے اور جب گھر جائے تو گھر والوں کے پاس اس کی شادی کے موضوع کے علاوہ کوئی بات نہیں ہوتی جبکہ وہ اس قابل نہیں ہوتا۔\n\nایسے حالات زدہ مریضوں کو جب **طلائے خاص** کا استعمال کرایا گیا تو ان میں خوشگوار زندگی کی اک نئی لہر آئی، دو تین ڈراپر استعمال سے بالکل ٹھیک ہوگئے۔یہ **طلائے خاص** رگ و پٹھوں کو تقویت دیکر تمام نقائص کو دور کرتی ہے۔ کثرت کی وجہ سے جو کمزوری ہو جاتی ہے ان تمام عوارضات کو ختم کرکے کرنٹ جیسی طاقت دیتی ہے۔\n\n# دوران مطب،\n\nایک صاحب تشریف لائے کہنے لگے عمر 45سال ہے کالج میں پروفیسر ہوں، اتنی زیادہ عمر بھی نہیں ہے۔ کھانے پینے کی بھی کمی نہیں ہے لیکن عرصہ تین سال سے شہوت میں کمی ہو گئی ہے۔ جب حقوق ذوجیت ادا کرنے لگتا ہوں۔ جذبات جوان ہوتے ہیں لیکن حق ادا نہیں کر پاتا۔\n\nجب ان کو دو تین مہینے **طلائے خاص** اور **سپر پاور پلس** گولیاں کچھ عرصہ استعمال کرائیں تو ان پر دوبارہ جوانی کی بہار آگئی کیوں نہ ہو؟ اس میں قیمتی روغنیات ڈالے گئے ہیں جو بوڑھوں کو جوان اور جوان کو طاقت ور بنا دیتے ہیں۔\n\n# خاص بات!\n\nکیمیاوی ادویات، سپرے، پارے ، چیونگم اور اس طرح کے خطرناک ادویات کا استعمال عضو خاص کی باریک شریانوں اور حساس حصے کو مردہ کر دیتے ہیں۔ ایسی چیزوں سے عضو کی طبعی حس ختم ہو جاتی ہے اور اسی افسوسناک صورتحال میں **طلائے خاص** ہی عضو کی بے حسی کو دور کرکے حیرت انگیز قوت کا سبب بنتی ہے۔ پرکیف لمحات کو اپنی مرضی سے طویل کرنے کی صلاحیت پیدا کرتی ہے۔ مصنوعی نہیں قدرتی طاقت بخشتی ہے۔\n\nبعض حضرات بہت جلدی کرتے ہیں کیونکہ مرض پرانا ہوتا ہے اور آہستہ آہستہ جاتا ہے اس لیے تسلی سے تقریباً چند ڈراپر استعمال کریں۔ انشاء اللہ اس کا فائدہ دیرپا اور دائمی ہوگا۔\n\n# نوٹ:\n\nاس دوائی کی تیاری میں تمام تیل اور جڑی بوٹیاں حلال،طیب وپاک ہیں یعنی سانڈھے کا تیل یا اس طرح کی کوئی اور چیز شامل نہیں۔ لہذا نمازی حضرات بھی بلا ججک استعمال کرسکتے ہیں۔",
+  "md": "طلائے خاص ایک روایتی روغن ہے جو مردانہ کمزوری، عضو خاص کی بے حسی اور ازدواجی مسائل کے لیے پیش کیا گیا ہے۔ اجزاء اور استعمال کی تفصیلات جانیں۔",
+  "img": "talai-khas-mwnr5btk.jpg"
  },
  {
   "id": "hab-muqawi",
