@@ -4,6 +4,16 @@ const WA="923111307530",DELIV=400;
 // جس کوڈ کے ساتھ popup:true لکھا ہو وہی ہوم پیج کے پاپ اپ میں نظر آئے گا (پاپ اپ کا کوڈ اور فیصد صرف یہیں سے بدلے گا، کسی اور جگہ نہیں)
 const CODES={"10%OFF":{pct:10,exp:null,popup:true},"ARFI15":{pct:15,exp:"2026-12-31"}};
 const SITE_CODE=Object.keys(CODES).find(k=>CODES[k].popup)||"";
+// ===== Firebase: کسٹمر کے ریویوز، آرڈرز اور صحت کے مشورے ایڈمن پینل تک پہنچانے کے لیے =====
+// db  = آپ کے Firebase Realtime Database کا لنک، مثلاً "https://میرا-پراجیکٹ-default-rtdb.firebaseio.com"
+// key = Firebase کی Web API Key (صرف ایڈمن پینل میں لاگ اِن کے لیے)
+// دونوں خالی ہوں تو پرانا طریقہ (واٹس ایپ) خود چلتا رہے گا۔
+const FB={db:"https://arfi-shop-default-rtdb.firebaseio.com",key:"AIzaSyCauNHCMrayc2sbYl2_gCmImE9BUiVJ_rk"};
+// ===== ڈسکاؤنٹ سسٹم: ایڈمن پینل کے "ڈسکاؤنٹ" ٹیب سے بدلتا ہے (products.js میں SITE_DISC کے طور پر محفوظ ہوتا ہے) =====
+// جب تک ایڈمن پینل سے پہلی بار ڈسکاؤنٹ محفوظ نہ ہو، اوپر والا CODES استعمال ہوتا رہے گا
+const _SD=typeof SITE_DISC!=="undefined"&&SITE_DISC?SITE_DISC:null;
+const DCODES=_SD?(_SD.codes||[]):Object.keys(CODES).map(k=>({id:k,k:k.toUpperCase(),type:"pct",val:CODES[k].pct,max:0,exp:CODES[k].exp||"",popup:!!CODES[k].popup,on:true}));
+const DSALE=_SD?(_SD.sale||{}):{};
 // کیٹیگریز: [id, نام, ایموجی, کسٹم لنک]
 const CATS=[["all","تمام ادویات","🌿","all-medicine"],["c","بچوں کی ادویات","🧒","children-medicine"],["m","مردوں کی ادویات","👨","mens-medicine"],["w","عورتوں کی ادویات","👩","womens-medicine"],["s","معدے کی ادویات","🍃","stomach-medicine"],["k","جلد کی ادویات","✨","skin-medicine"]];
 // باقی صفحات کے کسٹم لنک (پروڈکٹس کے لنک products.js میں ہر پروڈکٹ کے "s" میں ہیں)

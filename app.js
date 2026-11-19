@@ -7,17 +7,25 @@ const ld=()=>{try{return JSON.parse(localStorage.getItem("arfi_cart")||"[]")}cat
 const sv=c=>{try{localStorage.setItem("arfi_cart",JSON.stringify(c))}catch(e){}badge()};
 const badge=()=>{const n=ld().reduce((s,l)=>s+l.q,0),b=$("#cb");if(b){b.textContent=n;b.style.display=n?"block":"none"}};
 const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1800)};
-const lp=l=>gp(l.id).v[l.v][1];
+/* ===== سیل (پوری سائٹ یا مخصوص پروڈکٹس) ===== */
+const saleAct=s=>!!(s&&s.on!==false&&Number(s.pct)>0&&(!s.end||new Date(s.end)>new Date()));
+function saleOf(p){if(!p||!p.v||!p.v.some(v=>v[1]>0))return null;const S=(typeof DSALE!=="undefined"&&DSALE)||{},it=(S.items||[]).find(x=>x.id==p.id&&saleAct(x));if(it)return it;return saleAct(S.site)?S.site:null}
+const siteSaleOn=()=>{const S=(typeof DSALE!=="undefined"&&DSALE)||{};return saleAct(S.site)};
+const sp=(p,pr)=>{const s=saleOf(p);return s&&pr?Math.round(pr*(100-Number(s.pct))/100):pr};
+const lp=l=>{const p=gp(l.id);return sp(p,p.v[l.v][1])};
+const dlab=o=>o.type=="flat"?fmt(o.val):o.val+"%";
 const md=t=>t.split(/\n{2,}/).map(b=>b.startsWith('# ')?'<h3>'+b.slice(2)+'</h3>':b.startsWith('- ')?'<ul>'+b.split('\n').map(l=>'<li>'+l.replace(/^- /,'')+'</li>').join('')+'</ul>':'<p>'+b.replace(/\n/g,'<br>')+'</p>').join('').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 const desc=p=>p.t?md(p.t):'';
 function add(id,v,q){const c=ld(),l=c.find(x=>x.id==id&&x.v==v);l?l.q+=q:c.push({id,v,q});sv(c);toast("✔ کارٹ میں شامل ہو گیا")}
-function card(p,rb){const pr=p.v[0][1],n=(p.r||[]).length;return`<a class=pc href="${pu(p)}"><div class=im>${p.img?`<img src=${p.img} alt="${p.n}" loading=lazy>`:""}${rb&&n?`<span class=rb>★ ${n}</span>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+fmt(pr):""}</div></a>`}
+function card(p,rb){const S=saleOf(p),o=p.v[0][1],pr=S?sp(p,o):o,n=(p.r||[]).length;return`<a class=pc href="${pu(p)}"><div class=im>${p.img?`<img src=${p.img} alt="${p.n}" loading=lazy>`:""}${rb&&n?`<span class=rb>★ ${n}</span>`:""}${S?`<span class=sbd>${S.pct}% آف</span>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+(S?`<s class=op>${fmt(o)}</s> `:"")+fmt(pr):""}</div></a>`}
 function calc(c,code,pay){
- const sub=c.reduce((s,l)=>s+lp(l)*l.q,0),n=c.reduce((s,l)=>s+l.q,0);
+ const orig=c.reduce((s,l)=>s+gp(l.id).v[l.v][1]*l.q,0),sub=c.reduce((s,l)=>s+lp(l)*l.q,0),n=c.reduce((s,l)=>s+l.q,0),sale=orig-sub;
+ const hs=c.some(l=>saleOf(gp(l.id)));
  const multi=Math.min(sub,Math.max(0,n-1)*100);let a=sub-multi;
- const cp=code?Math.round(a*code.pct/100):0;a-=cp;
+ /* ایک وقت میں ایک ہی ڈسکاؤنٹ: سیل والی پروڈکٹ ہو تو کوڈ لاگو نہیں ہوتا */
+ const cp=code&&!hs?(code.type=="flat"?Math.min(a,Number(code.val)):Math.round(a*Number(code.val)/100)):0;a-=cp;
  const adv=pay=="adv"?Math.round(a*.05):0;a-=adv;
- return{sub,n,multi,cp,adv,total:a}}
+ return{orig,sub,sale,hs,n,multi,cp,adv,total:a}}
 const IC={wa:'<svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.05 0C5.5 0 .17 5.33.17 11.88c0 2.09.55 4.13 1.59 5.93L0 24l6.35-1.66a11.87 11.87 0 0 0 5.7 1.45h.01c6.55 0 11.88-5.33 11.88-11.88 0-3.17-1.23-6.15-3.42-8.43zM12.06 21.8a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.77.99 1.01-3.67-.24-.38a9.87 9.87 0 0 1-1.51-5.27c0-5.46 4.45-9.9 9.92-9.9 2.65 0 5.13 1.03 7 2.9a9.84 9.84 0 0 1 2.9 7c0 5.46-4.45 9.92-9.9 9.92zm5.43-7.42c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35z"/></svg>',
 fb:'<svg viewBox="0 0 24 24"><path d="M13.5 22v-8.2h2.8l.5-3.4h-3.3V8.3c0-1 .4-1.7 1.8-1.7h1.6V3.5c-.3 0-1.300-.2-2.500-.2-2.500 0-4.200 1.500-4.200 4.300v2.800H7.400v3.400h2.800V22z"/></svg>',
 ig:'<svg class=ln viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>',
@@ -32,11 +40,12 @@ function lay(){
  <div class=fc><h4>معلومات</h4><a href="${gu('about')}">ہمارا تعارف</a><a href="${gu('terms')}">شرائط و ضوابط</a><a href="${gu('cart')}">میرا کارٹ</a></div>
  <div class=fc><h4>رابطہ</h4><a href="${wa("میں آپ سے رابطہ کرنا چاہتا ہوں")}" target=_blank>واٹس ایپ: <bdi dir=ltr>0311-1307530</bdi></a><span>ہفتہ تا جمعرات<br>صبح 9 تا شام 5 بجے</span></div></div>
  <div class=fp><span>💵 کیش آن ڈیلیوری</span><span>🚚 فری ہوم ڈیلیوری</span><span>🌿 100% ہربل</span></div><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div></footer><button type=button class=fab id=hf aria-label="اپنی صحت کے متعلق مشورہ کریں">اپنی صحت کے متعلق مشورہ کریں</button><div id=toast></div>`);
- badge();search();hfInit();
- try{if(SITE_CODE&&!sessionStorage.getItem("pp")){sessionStorage.setItem("pp",1);setTimeout(popup,800)}}catch(e){}}
-function popup(){document.body.insertAdjacentHTML("beforeend",`<div class=ov id=pp><div class=pop><button class=cl onclick="$('#pp').remove()" aria-label="بند کریں">×</button><div style="font-size:2.4rem">🎁</div><b style="font-size:1.3rem;color:#1C352D">ہر آرڈر پر ${CODES[SITE_CODE].pct}% ڈسکاؤنٹ!</b><div>یہ کوڈ چیک آؤٹ پر لگائیں</div><div class=cd>${SITE_CODE}</div><button class="btn wa" id=cp>📋 کوڈ کاپی کریں</button></div></div>`);
+ badge();search();hfInit();saleCss();
+ try{const pc=popCode();if(pc&&!sessionStorage.getItem("pp")){sessionStorage.setItem("pp",1);setTimeout(()=>popup(pc),800)}}catch(e){}}
+const popCode=()=>{if(siteSaleOn())return null;return DCODES.find(c=>c.popup&&c.on!==false&&!(c.exp&&new Date(c.exp+"T23:59:59")<new Date()))||null};
+function popup(c){document.body.insertAdjacentHTML("beforeend",`<div class=ov id=pp><div class=pop><button class=cl onclick="$('#pp').remove()" aria-label="بند کریں">×</button><div style="font-size:2.4rem">🎁</div><b style="font-size:1.3rem;color:#1C352D">ہر آرڈر پر ${dlab(c)} ڈسکاؤنٹ!</b><div>یہ کوڈ چیک آؤٹ پر لگائیں</div><div class=cd>${c.k}</div><button class="btn wa" id=cp>📋 کوڈ کاپی کریں</button></div></div>`);
  $("#cp").onclick=()=>{const d=()=>{$("#cp").textContent="✔ کاپی ہو گیا";setTimeout(()=>$("#pp")&&$("#pp").remove(),900)};
- navigator.clipboard?navigator.clipboard.writeText(SITE_CODE).then(d,d):d()}}
+ navigator.clipboard?navigator.clipboard.writeText(c.k).then(d,d):d()}}
 
 /* ===== سرچ (صرف پروڈکٹ کا نام) ===== */
 const nz=s=>String(s||"").toLowerCase().replace(/[\u064B-\u065F\u0670\u0640\u200c\u200d]/g,"").replace(/[يىېۍێ]/g,"ی").replace(/[ےۓئ]/g,"ی").replace(/[آأإٱ]/g,"ا").replace(/ؤ/g,"و").replace(/ك/g,"ک").replace(/[ةۃۀ]/g,"ہ").replace(/ھ/g,"ہ").replace(/[ذضظ]/g,"ز").replace(/[ثص]/g,"س").replace(/\s+/g," ").trim();
@@ -46,7 +55,7 @@ function sfind(q){q=nz(q);if(!q)return[];if(!SI)SI=P.map(p=>{const n=nz(p.n);ret
  return r.sort((a,b)=>a[0]-b[0]).slice(0,8).map(a=>a[1])}
 function search(){const i=$("#sq"),g=$("#sg");if(!i)return;
  const sh=()=>{const v=i.value.trim();if(!v){g.classList.remove("on");return}const r=sfind(v);
-  g.innerHTML=r.length?r.map(p=>`<a class=sgi href="${pu(p)}"><span class=sgm>${p.img?`<img src=${p.img} alt="">`:""}</span><span class=sgn>${p.n}</span>${p.v[0][1]?`<b>${fmt(p.v[0][1])}</b>`:""}</a>`).join(""):'<div class=sgo>اس نام کی کوئی پروڈکٹ نہیں ملی</div>';g.classList.add("on")};
+  g.innerHTML=r.length?r.map(p=>`<a class=sgi href="${pu(p)}"><span class=sgm>${p.img?`<img src=${p.img} alt="">`:""}</span><span class=sgn>${p.n}</span>${p.v[0][1]?`<b>${fmt(sp(p,p.v[0][1]))}</b>`:""}</a>`).join(""):'<div class=sgo>اس نام کی کوئی پروڈکٹ نہیں ملی</div>';g.classList.add("on")};
  i.addEventListener("input",sh);i.addEventListener("focus",sh);
  i.addEventListener("keydown",e=>{if(e.key=="Enter"){const r=sfind(i.value);if(r.length)location.href=pu(r[0]);e.preventDefault()}else if(e.key=="Escape")g.classList.remove("on")});
  document.addEventListener("click",e=>{if(!e.target.closest(".sb"))g.classList.remove("on")})}
@@ -154,9 +163,50 @@ function hfForm(k){const F=HF[k],fl=[];HFS={k,a:{},f:fl};$("#hfb").style.visibil
   if(f.y=="s"||f.y=="m")c=`<div class=hcs data-i=${i} data-y=${f.y}>${f.o.map(v=>`<button type=button class=hc data-v="${v}">${v}</button>`).join("")}</div>`;
   else if(f.y=="x")c=`<textarea data-i=${i} rows=3 placeholder="${f.o}"></textarea>`;
   else c=`<input data-i=${i} type=${f.y=="t"?"text":"tel"} ${f.y=="t"?"":"inputmode=numeric"} placeholder="${f.o}" autocomplete=off>`;
-  return`<div class=hff id=hff${i}><label>${f.q}${f.r?" <i>*</i>":""}</label>${c}<div class=em>${f.y=="p"?"درست موبائل نمبر لکھیں (03XXXXXXXXX)":f.y=="a"?"درست عمر لکھیں":"یہ خانہ لازمی ہے"}</div></div>`}).join("")+`</div>`).join("")+`<button type=button class=hsub id=hsub>✅ سبمٹ کریں</button><div class=hnt>سبمٹ دبانے پر واٹس ایپ کھلے گا جس میں آپ کی ساری معلومات پہلے سے لکھی ہوں گی، بس "سینڈ" دبا دیں۔</div>`;
+  return`<div class=hff id=hff${i}><label>${f.q}${f.r?" <i>*</i>":""}</label>${c}<div class=em>${f.y=="p"?"درست موبائل نمبر لکھیں (03XXXXXXXXX)":f.y=="a"?"درست عمر لکھیں":"یہ خانہ لازمی ہے"}</div></div>`}).join("")+`</div>`).join("")+`<button type=button class=hsub id=hsub>✅ سبمٹ کریں</button><div class=hnt>${FBOK()?"سبمٹ کرنے سے آپ کا فارم جمع ہو جائے گا اور آپ کی تمام معلومات ہم تک پہنچ جائیں گی۔":"سبمٹ دبانے پر واٹس ایپ کھلے گا جس میں آپ کی ساری معلومات پہلے سے لکھی ہوں گی، بس \"سینڈ\" دبا دیں۔"}</div>`;
  $("#hfy").scrollTop=0}
-function hfSend(){if(!HFS)return;const bad=hfVal(HFS);$$(".hff.er").forEach(x=>x.classList.remove("er"));
+async function hfSend(){if(!HFS)return;const bad=hfVal(HFS);$$(".hff.er").forEach(x=>x.classList.remove("er"));
  if(bad.length){bad.forEach(i=>$("#hff"+i).classList.add("er"));$("#hff"+bad[0]).scrollIntoView({behavior:"smooth",block:"center"});toast("براہِ کرم لال نشان والے خانے درست کریں");return}
- const msg=hfMsg(HFS);window.open(wa(msg),"_blank");hfClose();toast("✔ واٹس ایپ کھل رہا ہے، سینڈ دبا دیں")}
+ const msg=hfMsg(HFS);
+ if(!FBOK()){window.open(wa(msg),"_blank");hfClose();toast("✔ واٹس ایپ کھل رہا ہے، سینڈ دبا دیں");return}
+ const b=$("#hsub");b.disabled=true;b.textContent="⏳ بھیجا جا رہا ہے...";
+ try{await fbPost("consults",{text:msg,n:String(HFS.a[0]||"").trim(),p:hfPh(HFS.a[2]||""),ct:String(HFS.a[3]||"").trim(),f:HF[HFS.k].t,at:new Date().toISOString()});
+  hfClose();thanks("آپ کا بہت شکریہ!","آپ کی تمام معلومات ہم تک پہنچ چکی ہیں۔ ہماری ٹیم اگلے 24 گھنٹوں میں آپ سے رابطہ کرے گی۔")}
+ catch(e){b.disabled=false;b.textContent="✅ سبمٹ کریں";const o=$("#hfb2");if(o)o.remove();b.insertAdjacentHTML("afterend",`<div class=hnt id=hfb2>فارم براہِ راست جمع نہیں ہو سکا۔ دوبارہ کوشش کریں، یا واٹس ایپ پر بھیج دیں:<br><a class="btn wa" target=_blank href="${wa(msg)}" style="margin-top:6px">واٹس ایپ پر بھیجیں</a></div>`)}}
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&$("#hfo"))hfClose()});
+
+/* ===== Firebase (کسٹمر کے ریویوز، آرڈرز اور مشورے ایڈمن پینل تک پہنچانا) ===== */
+const FBOK=()=>typeof FB!=="undefined"&&!!FB.db;
+const fbu=p=>FB.db.replace(/\/+$/,"")+"/"+p+".json";
+async function fbPost(p,o){const r=await fetch(fbu(p),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)});if(!r.ok)throw new Error("fb "+r.status);return r.json()}
+async function fbPut(p,o){const r=await fetch(fbu(p),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)});if(!r.ok)throw new Error("fb "+r.status);return r.json()}
+async function fbGet(p){const r=await fetch(fbu(p)+"?t="+Date.now());if(!r.ok)throw new Error("fb "+r.status);return r.json()}
+/* شکریہ کا پیغام */
+function thanks(t,m){const o=$("#tk");if(o)o.remove();document.body.insertAdjacentHTML("beforeend",`<div class=ov id=tk style="z-index:300"><div class=pop><button class=cl onclick="$('#tk').remove()" aria-label="بند کریں">×</button><div style="font-size:2.6rem">✅</div><b style="font-size:1.25rem;color:#1C352D">${t}</b><p style="margin:6px 0 12px;line-height:2.1">${m}</p><button class="btn wa" onclick="$('#tk').remove()">ٹھیک ہے</button></div></div>`)}
+/* پروڈکٹ کے نیچے کسٹمر کا ریویو فارم (ستارے ہمیشہ 5، صرف نام اور ریویو) */
+function rvForm(p){if(!FBOK())return"";return`<div class=box id=rvf data-p="${esc(p.id)}"><h3 style="margin:0;color:var(--g);font-weight:400;font-size:1.2rem">✍️ اپنا ریویو لکھیں</h3><div class=info style="margin:6px 0 8px">اس پروڈکٹ کے بارے میں اپنا تجربہ ہمارے ساتھ شیئر کریں۔</div><input id=rvn placeholder="آپ کا نام" maxlength=60 autocomplete=name><textarea id=rvt rows=4 placeholder="اپنا ریویو یہاں لکھیں…" maxlength=1500></textarea><input id=rvh tabindex=-1 autocomplete=off aria-hidden=true style="position:absolute;left:-9999px;width:1px"><button class="btn wa" id=rvb onclick="rvSend()">📩 ریویو جمع کروائیں</button></div>`}
+async function rvSend(){const f=$("#rvf");if(!f||$("#rvh").value)return;const n=$("#rvn").value.trim(),t=$("#rvt").value.trim(),p=gp(f.dataset.p);
+ if(n.length<2||t.length<5){toast("براہِ کرم اپنا نام اور ریویو لکھیں");return}
+ try{if(Date.now()-(+localStorage.getItem("rv_t")||0)<30000){toast("براہِ کرم تھوڑی دیر بعد دوبارہ کوشش کریں");return}}catch(e){}
+ const b=$("#rvb");b.disabled=true;b.textContent="⏳ جمع ہو رہا ہے...";
+ try{await fbPost("reviews",{n,t,pid:p?p.id:f.dataset.p,pn:p?p.n:"",at:new Date().toISOString()});try{localStorage.setItem("rv_t",Date.now())}catch(e){}
+  $("#rvn").value="";$("#rvt").value="";thanks("آپ کے ریویو کا شکریہ!","آپ کی رائے ہمارے لیے بہت قیمتی ہے۔ ہماری ٹیم کی جانچ کے بعد آپ کا ریویو ویب سائٹ پر شائع کر دیا جائے گا۔")}
+ catch(e){toast("❌ ریویو جمع نہیں ہو سکا، دوبارہ کوشش کریں")}
+ b.disabled=false;b.textContent="📩 ریویو جمع کروائیں"}
+/* سیل ختم ہونے کا کاؤنٹ ڈاؤن */
+let CDT=null;
+function ctStart(){clearInterval(CDT);const e=$("#cdn");if(!e)return;const end=new Date(e.dataset.e).getTime();
+ const tick=()=>{const s=Math.floor((end-Date.now())/1000);if(s<=0){clearInterval(CDT);if(typeof pdraw=="function"&&typeof PP!="undefined"&&PP)pdraw();return}
+  const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;
+  e.innerHTML=`<div>⏰ سیل ختم ہونے میں باقی وقت</div><div class=cdb>${d?`<b>${d}<small>دن</small></b>`:""}<b>${h}<small>گھنٹے</small></b><b>${m}<small>منٹ</small></b><b>${x}<small>سیکنڈ</small></b></div>`};
+ tick();CDT=setInterval(tick,1000)}
+function saleCss(){if($("#sls"))return;document.head.insertAdjacentHTML("beforeend",`<style id=sls>
+.sbd{position:absolute;top:6px;right:6px;z-index:2;background:linear-gradient(135deg,#ef3b36,#b71c1c);color:#fff;font:700 .82rem/1.5 'Noto Nastaliq Urdu',serif;padding:3px 11px 1px;border-radius:8px 16px 8px 16px;box-shadow:0 3px 8px #b71c1c66;direction:ltr}
+.pc .pr s.op,.op2{color:#8a8a8a;font-weight:400;font-size:.8rem;text-decoration:line-through}
+.sbd2{display:inline-block;background:linear-gradient(135deg,#ef3b36,#b71c1c);color:#fff;font:700 1rem/1.8 'Noto Nastaliq Urdu',serif;padding:0 14px;border-radius:10px 18px 10px 18px;box-shadow:0 3px 8px #b71c1c55;direction:ltr}
+.cdn{margin:10px auto 6px;max-width:380px;background:#fff4f3;border:1.5px solid #e53935;border-radius:16px;padding:4px 10px 8px;color:#b71c1c;font-size:.95rem;line-height:2}
+.cdb{display:flex;justify-content:center;gap:8px;direction:ltr}
+.cdb b{min-width:60px;background:linear-gradient(160deg,#d32f2f,#8e1313);color:#fff;border-radius:10px;font:700 1.35rem/1.25 sans-serif;padding:5px 4px 2px;display:flex;flex-direction:column;align-items:center}
+.cdb b small{font:400 .7rem/1.9 'Noto Nastaliq Urdu',serif;opacity:.92}
+.sinfo{background:#fff4f3;border:1px dashed #e53935;color:#8e1313}
+</style>`)}

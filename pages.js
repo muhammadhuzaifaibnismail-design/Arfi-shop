@@ -54,32 +54,44 @@ function nf(){document.title='صفحہ نہیں ملا | عارفی دارالش
 
 /* ---- پروڈکٹ ---- */
 function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.title=PP.n;let m=document.querySelector('meta[name=description]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=PP.md||(PP.n+' — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔');pdraw()}
-function pdraw(){const p=PP,pr=p.v[vi][1],lb=p.v[vi][0];
+function pdraw(){const p=PP,op=p.v[vi][1],S=saleOf(p),pr=S?sp(p,op):op,lb=p.v[vi][0];
 $('#m').innerHTML=`<div class=box style=text-align:center>${p.img?'<img src='+p.img+' alt="" style="width:100%;max-width:360px;border-radius:14px">':"<div style='background:var(--c) url(logo.webp) center/40% no-repeat;aspect-ratio:16/10;border-radius:14px'></div>"}<h1 style='font-weight:400;color:var(--g);font-size:1.6rem'>${p.n}</h1>
-${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+(v[0]||(v[1]?fmt(v[1]):''))+'</button>').join('')+'</div>':''}
-${pr?'<p><span class=big>'+fmt(pr)+'</span></p><div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
+${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+(v[0]||(v[1]?fmt(sp(p,v[1])):''))+'</button>').join('')+'</div>':''}
+${pr?'<p>'+(S?'<span class=sbd2>'+S.pct+'% آف</span> <s class=op2>'+fmt(op)+'</s><br>':'')+'<span class=big>'+fmt(pr)+'</span></p>'+(S&&S.end?'<div class=cdn id=cdn data-e="'+S.end+'"></div>':'')+'<div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
 <p><a class='btn wa' target=_blank href="${wa('میں "'+p.n+'" '+(lb?'('+lb+') ':'')+'× '+q+(pr?' آرڈر کرنا چاہتا ہوں۔ قیمت: '+fmt(pr*q):' کے بارے میں معلومات چاہتا ہوں'))}">واٹس ایپ پر ابھی آرڈر کریں</a></p>
 ${pr?'<button class="btn lt en" onclick="add(PP.id,vi,q)">🛒 Add to Cart</button>':''}</div>
-<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${reviewsSec(p)}${faqSec()}`}
+<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${reviewsSec(p)}${rvForm(p)}${faqSec()}`;ctStart()}
 
 /* ---- کارٹ ---- */
 function cart(){document.title='کارٹ | عارفی دارالشفاء';cdraw()}
 function cdraw(){const c=ld();if(!c.length){$('#m').innerHTML='<div class=box style=text-align:center><p>آپ کا کارٹ خالی ہے۔</p><a class=btn href="'+cu(CATS[0])+'">ادویات دیکھیں</a></div>';return}
+const hs=c.some(l=>saleOf(gp(l.id)));if(hs)code=null;
 const t=calc(c,code,pay),rest=Math.max(0,t.total-DELIV);
-$('#m').innerHTML=`<h2>آپ کا کارٹ</h2><div class=box>${c.map((l,i)=>'<div class=rw><div>'+gp(l.id).n+'<small>'+gp(l.id).v[l.v][0]+' | '+fmt(lp(l))+'</small></div><span class=qty><button onclick="ch('+i+',-1)">−</button>'+l.q+'<button onclick="ch('+i+',1)">+</button></span><button class=x onclick="ch('+i+',-99)">🗑</button></div>').join('')}</div>
-<div class=box><b>ڈسکاؤنٹ کوڈ</b><div style=display:flex;gap:6px><input id=cd placeholder="کوڈ یہاں پیسٹ کریں" ${code?'disabled value="'+code.k+'"':''}><button class=btn style=width:auto onclick=ap() ${code?'disabled':''}>لگائیں</button></div><div id=cm>${code?'✔ '+code.pct+'% ڈسکاؤنٹ لگ گیا':''}</div></div>
+$('#m').innerHTML=`<h2>آپ کا کارٹ</h2><div class=box>${c.map((l,i)=>'<div class=rw><div>'+gp(l.id).n+'<small>'+gp(l.id).v[l.v][0]+' | '+(saleOf(gp(l.id))?'<s class=op2>'+fmt(gp(l.id).v[l.v][1])+'</s> ':'')+fmt(lp(l))+(saleOf(gp(l.id))?' <b style="color:#b71c1c">('+saleOf(gp(l.id)).pct+'% سیل)</b>':'')+'</small></div><span class=qty><button onclick="ch('+i+',-1)">−</button>'+l.q+'<button onclick="ch('+i+',1)">+</button></span><button class=x onclick="ch('+i+',-99)">🗑</button></div>').join('')}</div>
+${hs?'<div class=box><div class="info sinfo">🏷 آپ کے کارٹ میں سیل والی پروڈکٹ موجود ہے، اس لیے اس آرڈر پر ڈسکاؤنٹ کوڈ لاگو نہیں ہوگا (ایک وقت میں ایک ہی ڈسکاؤنٹ)۔</div></div>':`<div class=box><b>ڈسکاؤنٹ کوڈ</b><div style=display:flex;gap:6px><input id=cd placeholder="کوڈ یہاں پیسٹ کریں" ${code?'disabled value="'+code.k+'"':''}><button class=btn style=width:auto onclick=ap() ${code?'disabled':''}>لگائیں</button></div><div id=cm>${code?'✔ کوڈ "'+code.k+'" لگ گیا — '+dlab(code)+' ڈسکاؤنٹ':''}</div></div>`}
 <div class=box><b>ادائیگی کا طریقہ</b><br><label><input type=radio name=py style=width:auto ${pay=='cod'?'checked':''} onchange="pay='cod';cdraw()"> کیش آن ڈیلیوری</label><br><label><input type=radio name=py style=width:auto ${pay=='adv'?'checked':''} onchange="pay='adv';cdraw()"> ایڈوانس پیمنٹ (اضافی 5% ڈسکاؤنٹ)</label>
 <div class=info>${pay=='adv'?'آرڈر پلیس کرنے کے بعد ہماری ٹیم آپ سے رابطہ کر کے اکاؤنٹ نمبر فراہم کر دے گی۔':'کیش آن ڈیلیوری کی صورت میں ڈیلیوری چارجز ایڈوانس وصول کیے جاتے ہیں۔ ہماری ہوم ڈیلیوری فری ہے، مگر کورئیر کو Rs. '+DELIV+' ڈیلیوری چارجز دینا ہوتے ہیں۔ آپ باقی Rs. '+rest+' ڈیلیوری کے وقت کورئیر کو ادا کریں گے۔ ڈیلیوری چارجز کی ادائیگی کے لیے ہماری ٹیم آپ سے رابطہ کر کے اکاؤنٹ نمبر فراہم کر دے گی۔'}</div></div>
-<div class=box><table class=sum width=100%><tr><td>پروڈکٹس (${t.n})<td>${fmt(t.sub)}${t.multi?'<tr><td>ایکسٹرا پروڈکٹ ڈسکاؤنٹ<td>- '+fmt(t.multi):''}${t.cp?'<tr><td>کوڈ ڈسکاؤنٹ<td>- '+fmt(t.cp):''}${t.adv?'<tr><td>ایڈوانس ڈسکاؤنٹ 5%<td>- '+fmt(t.adv):''}<tr><td>ڈیلیوری<td>فری<tr class=tt><td>کل رقم<td>${fmt(t.total)}</table></div>
-<div class=box><b>ڈیلیوری کی تفصیل</b><input id=nm placeholder="آپ کا نام"><input id=ph type=tel placeholder="موبائل نمبر"><input id=ad placeholder="گلی نمبر، مکان نمبر"><input id=lm placeholder="مشہور جگہ / محلے کا نام"><input id=ct placeholder="شہر کا نام"><input id=sh placeholder="دکان کا نام، بازار (اگر دکان پر منگوانا ہو)"><button class="btn wa" onclick=place()>✅ آرڈر پلیس کریں</button></div>`}
+<div class=box><table class=sum width=100%><tr><td>پروڈکٹس (${t.n})<td>${fmt(t.orig)}${t.sale?'<tr><td>سیل ڈسکاؤنٹ<td>- '+fmt(t.sale):''}${t.multi?'<tr><td>ایکسٹرا پروڈکٹ ڈسکاؤنٹ<td>- '+fmt(t.multi):''}${t.cp?'<tr><td>کوڈ ڈسکاؤنٹ ('+code.k+' — '+dlab(code)+')<td>- '+fmt(t.cp):''}${t.adv?'<tr><td>ایڈوانس ڈسکاؤنٹ 5%<td>- '+fmt(t.adv):''}<tr><td>ڈیلیوری<td>فری<tr class=tt><td>کل رقم<td>${fmt(t.total)}</table></div>
+<div class=box><b>ڈیلیوری کی تفصیل</b><input id=nm placeholder="آپ کا نام"><input id=ph type=tel placeholder="موبائل نمبر"><input id=ad placeholder="گلی نمبر، مکان نمبر"><input id=lm placeholder="مشہور جگہ / محلے کا نام"><input id=ct placeholder="شہر کا نام"><input id=sh placeholder="دکان کا نام، بازار (اگر دکان پر منگوانا ہو)"><button class="btn wa" id=pob onclick=place()>✅ آرڈر پلیس کریں</button></div>`}
 function ch(i,d){const c=ld();c[i].q+=d;if(c[i].q<1)c.splice(i,1);sv(c);cdraw()}
-function ap(){const k=$('#cd').value.trim().toUpperCase(),o=CODES[k];
+async function ap(){const k=$('#cd').value.trim().toUpperCase(),o=DCODES.find(x=>k&&String(x.k).toUpperCase()==k&&x.on!==false);
 if(!o||(o.exp&&new Date(o.exp+'T23:59:59')<new Date())){$('#cm').textContent='❌ کوڈ درست نہیں یا اس کی مدت ختم ہو چکی ہے';return}
-code={k,pct:o.pct};cdraw()}
-function place(){const c=ld(),nm=$('#nm').value.trim(),ph=$('#ph').value.trim(),ct=$('#ct').value.trim(),ad=$('#ad').value.trim();
+if(o.max>0&&FBOK()){try{const u=Number(await fbGet('uses/'+o.id))||0;if(u>=o.max){$('#cm').textContent='❌ یہ کوڈ استعمال کی مقررہ حد پوری کر چکا ہے';return}}catch(e){$('#cm').textContent='❌ کوڈ چیک نہیں ہو سکا، دوبارہ کوشش کریں';return}}
+code={k:o.k,id:o.id,type:o.type||'pct',val:Number(o.val),max:o.max||0};cdraw()}
+async function place(){const c=ld(),nm=$('#nm').value.trim(),ph=$('#ph').value.trim(),ct=$('#ct').value.trim(),ad=$('#ad').value.trim();
 if(!nm||!ph||!ct||!ad){toast('نام، موبائل، پتہ اور شہر لازمی ہیں');return}
 const t=calc(c,code,pay),rest=Math.max(0,t.total-DELIV);
-let m='السلام علیکم! میں یہ آرڈر کرنا چاہتا ہوں:\n\n'+c.map((l,i)=>(i+1)+') '+gp(l.id).n+' ('+gp(l.id).v[l.v][0]+') × '+l.q+' = '+fmt(lp(l)*l.q)).join('\n')+'\n\nپروڈکٹس کی رقم: '+fmt(t.sub);
-if(t.multi)m+='\nایکسٹرا پروڈکٹ ڈسکاؤنٹ: -'+fmt(t.multi);if(t.cp)m+='\nکوڈ ('+code.k+'): -'+fmt(t.cp);if(t.adv)m+='\nایڈوانس ڈسکاؤنٹ: -'+fmt(t.adv);
+let m='السلام علیکم! میں یہ آرڈر کرنا چاہتا ہوں:\n\n'+c.map((l,i)=>{const pr=gp(l.id),S=saleOf(pr);return (i+1)+') '+pr.n+' ('+pr.v[l.v][0]+') × '+l.q+' = '+fmt(lp(l)*l.q)+(S?' [سیل '+S.pct+'% آف]':'')}).join('\n')+'\n\nپروڈکٹس کی رقم: '+fmt(t.orig);
+if(t.sale)m+='\nسیل ڈسکاؤنٹ: -'+fmt(t.sale);
+if(t.multi)m+='\nایکسٹرا پروڈکٹ ڈسکاؤنٹ: -'+fmt(t.multi);if(t.cp)m+='\nکوڈ ڈسکاؤنٹ (کوڈ: '+code.k+' — '+dlab(code)+'): -'+fmt(t.cp);if(t.adv)m+='\nایڈوانس ڈسکاؤنٹ: -'+fmt(t.adv);
 m+='\n*کل رقم: '+fmt(t.total)+'*\nادائیگی: '+(pay=='adv'?'ایڈوانس پیمنٹ':'کیش آن ڈیلیوری (ڈیلیوری چارجز '+fmt(DELIV)+' ایڈوانس، باقی '+fmt(rest)+' کورئیر کو)')+'\n\nنام: '+nm+'\nموبائل: '+ph+'\nپتہ: '+ad+'، '+$('#lm').value+'، '+ct+($('#sh').value?'\nدکان/بازار: '+$('#sh').value:'');
-window.open(wa(m),'_blank')}
+if(!FBOK()){window.open(wa(m),'_blank');return}
+const b=$('#pob');b.disabled=true;b.textContent='⏳ آرڈر بھیجا جا رہا ہے...';
+try{
+ if(code&&code.max>0){const u=Number(await fbGet('uses/'+code.id))||0;if(u>=code.max){code=null;toast('❌ یہ کوڈ استعمال کی مقررہ حد پوری کر چکا ہے');cdraw();return}}
+ await fbPost('orders',{text:m,n:nm,p:ph,ct,tot:t.total,at:new Date().toISOString()});
+ if(code&&code.max>0){try{await fbPut('uses/'+code.id,{'.sv':{increment:1}})}catch(e){}}
+ sv([]);code=null;cdraw();
+ thanks('آپ کے آرڈر کرنے کا بہت شکریہ!','آپ کے آرڈر کی تفصیلات ہمارے پاس پہنچ چکی ہیں۔ اگلے 24 گھنٹوں میں ہماری ٹیم آپ سے رابطہ کرے گی۔')
+}catch(e){b.disabled=false;b.textContent='✅ آرڈر پلیس کریں';const o=$('#pfb');if(o)o.remove();
+ b.insertAdjacentHTML('afterend','<div class=info id=pfb style="margin-top:8px">آرڈر براہِ راست جمع نہیں ہو سکا۔ دوبارہ کوشش کریں، یا واٹس ایپ پر بھیج دیں:<br><a class="btn wa" target=_blank href="'+wa(m)+'" style="margin-top:6px">واٹس ایپ پر آرڈر بھیجیں</a></div>')}}
