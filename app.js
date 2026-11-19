@@ -186,7 +186,8 @@ function thanks(t,m){const o=$("#tk");if(o)o.remove();document.body.insertAdjace
 /* پروڈکٹ کے نیچے کسٹمر کا ریویو فارم (ستارے ہمیشہ 5، صرف نام اور ریویو) */
 function rvForm(p){if(!FBOK())return"";return`<div class=box id=rvf data-p="${esc(p.id)}"><h3 style="margin:0;color:var(--g);font-weight:400;font-size:1.2rem">✍️ اپنا ریویو لکھیں</h3><div class=info style="margin:6px 0 8px">اس پروڈکٹ کے بارے میں اپنا تجربہ ہمارے ساتھ شیئر کریں۔</div><input id=rvn placeholder="آپ کا نام" maxlength=60 autocomplete=name><textarea id=rvt rows=4 placeholder="اپنا ریویو یہاں لکھیں…" maxlength=1500></textarea><input id=rvh tabindex=-1 autocomplete=off aria-hidden=true style="position:absolute;top:0;right:0;width:1px;height:1px;opacity:0;pointer-events:none"><button class="btn wa" id=rvb onclick="rvSend()">📩 ریویو جمع کروائیں</button></div>`}
 async function rvSend(){const f=$("#rvf");if(!f||$("#rvh").value)return;const n=$("#rvn").value.trim(),t=$("#rvt").value.trim(),p=gp(f.dataset.p);
- if(n.length<2||t.length<5){toast("براہِ کرم اپنا نام اور ریویو لکھیں");return}
+ if(n.length<2){toast("براہِ کرم اپنا نام لکھیں");return}
+ if(t.length<2){toast("براہِ کرم اپنا ریویو لکھیں");return}
  try{if(Date.now()-(+localStorage.getItem("rv_t")||0)<30000){toast("براہِ کرم تھوڑی دیر بعد دوبارہ کوشش کریں");return}}catch(e){}
  const b=$("#rvb");b.disabled=true;b.textContent="⏳ جمع ہو رہا ہے...";
  try{await fbPost("reviews",{n,t,pid:p?p.id:f.dataset.p,pn:p?p.n:"",at:new Date().toISOString()});try{localStorage.setItem("rv_t",Date.now())}catch(e){}
