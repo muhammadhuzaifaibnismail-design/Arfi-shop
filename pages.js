@@ -21,7 +21,7 @@ const R=route();
 function home(){
  let t=P.map((p,i)=>[p,(p.r||[]).length,i]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).slice(0,6).map(x=>x[0]);
  if(!t.length)t=['akseer-arfi','honey','shah-akbari'].map(gp).filter(Boolean);
- $('#m').innerHTML=`<div class=sl>${[1,2,3,4].map(i=>'<img src=s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
+ $('#m').innerHTML=`<div class=sl>${[1,2,3,4,5].map(i=>'<img src=s'+i+'.webp alt="" '+(i==1?'class=on':'')+'>').join('')}</div>
 ${secHead('ہماری ادویات')}<div class=grid>${CATS.map(c=>`<a class=cat href="${cu(c)}"><i>${c[2]}</i>${c[1]}</a>`).join('')}</div>
 <div class=dw><a class=dis href="${gu('diseases')}">بیماریاں اور ان کے علاج</a></div>
 ${secHead('ٹاپ ریٹڈ پروڈکٹس','وہ ادویات جنہیں ہمارے کسٹمرز نے سب سے زیادہ پسند کیا')}<div class=grid>${t.map(p=>card(p,1)).join('')}</div>
@@ -57,7 +57,7 @@ function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.tit
 function pdraw(){const p=PP,op=p.v[vi][1],S=saleOf(p),pr=S?sp(p,op):op,lb=p.v[vi][0];
 $('#m').innerHTML=`<div class=box style=text-align:center>${p.img?'<img src='+p.img+' alt="" style="width:100%;max-width:360px;border-radius:14px">':"<div style='background:var(--c) url(logo.webp) center/40% no-repeat;aspect-ratio:16/10;border-radius:14px'></div>"}<h1 style='font-weight:400;color:var(--g);font-size:1.6rem'>${p.n}</h1>
 ${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+(v[0]||(v[1]?fmt(sp(p,v[1])):''))+'</button>').join('')+'</div>':''}
-${pr?'<p>'+(S?'<span class=sbd2>'+S.pct+'% آف</span> <s class=op2>'+fmt(op)+'</s><br>':'')+'<span class=big>'+fmt(pr)+'</span></p>'+(S&&S.end?'<div class=cdn id=cdn data-e="'+S.end+'"></div>':'')+'<div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
+${pr?'<div class=pbx><span class=big>'+fmt(pr)+'</span>'+(S?'<div class=pcut><s class=op2>'+fmt(op)+'</s><span class=sbd2>'+S.pct+'% OFF</span></div>':'')+'</div>'+(S&&S.end?'<div class=cdn id=cdn data-e="'+S.end+'"></div>':'')+'<div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
 <p><a class='btn wa' target=_blank href="${wa('میں "'+p.n+'" '+(lb?'('+lb+') ':'')+'× '+q+(pr?' آرڈر کرنا چاہتا ہوں۔ قیمت: '+fmt(pr*q):' کے بارے میں معلومات چاہتا ہوں'))}">واٹس ایپ پر ابھی آرڈر کریں</a></p>
 ${pr?'<button class="btn lt en" onclick="add(PP.id,vi,q)">🛒 Add to Cart</button>':''}</div>
 <div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${reviewsSec(p)}${rvForm(p)}${faqSec()}`;ctStart()}

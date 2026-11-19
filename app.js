@@ -17,7 +17,7 @@ const dlab=o=>o.type=="flat"?fmt(o.val):o.val+"%";
 const md=t=>t.split(/\n{2,}/).map(b=>b.startsWith('# ')?'<h3>'+b.slice(2)+'</h3>':b.startsWith('- ')?'<ul>'+b.split('\n').map(l=>'<li>'+l.replace(/^- /,'')+'</li>').join('')+'</ul>':'<p>'+b.replace(/\n/g,'<br>')+'</p>').join('').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 const desc=p=>p.t?md(p.t):'';
 function add(id,v,q){const c=ld(),l=c.find(x=>x.id==id&&x.v==v);l?l.q+=q:c.push({id,v,q});sv(c);toast("✔ کارٹ میں شامل ہو گیا")}
-function card(p,rb){const S=saleOf(p),o=p.v[0][1],pr=S?sp(p,o):o,n=(p.r||[]).length;return`<a class=pc href="${pu(p)}"><div class=im>${p.img?`<img src=${p.img} alt="${p.n}" loading=lazy>`:""}${rb&&n?`<span class=rb>★ ${n}</span>`:""}${S?`<span class=sbd>${S.pct}% آف</span>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+(S?`<s class=op>${fmt(o)}</s> `:"")+fmt(pr):""}</div></a>`}
+function card(p,rb){const S=saleOf(p),o=p.v[0][1],pr=S?sp(p,o):o,n=(p.r||[]).length;return`<a class=pc href="${pu(p)}"><div class=im>${p.img?`<img src=${p.img} alt="${p.n}" loading=lazy>`:""}${rb&&n?`<span class=rb>★ ${n}</span>`:""}${S?`<span class=sbd>${S.pct}% OFF</span>`:""}</div><h3>${p.n}</h3><div class=pr>${pr?(p.v.length>1?"From ":"")+(S?`<s class=op>${fmt(o)}</s> `:"")+fmt(pr):""}</div></a>`}
 function calc(c,code,pay){
  const orig=c.reduce((s,l)=>s+gp(l.id).v[l.v][1]*l.q,0),sub=c.reduce((s,l)=>s+lp(l)*l.q,0),n=c.reduce((s,l)=>s+l.q,0),sale=orig-sub;
  const hs=c.some(l=>saleOf(gp(l.id)));
@@ -184,14 +184,16 @@ async function fbGet(p){const r=await fetch(fbu(p)+"?t="+Date.now());if(!r.ok)th
 /* شکریہ کا پیغام */
 function thanks(t,m){const o=$("#tk");if(o)o.remove();document.body.insertAdjacentHTML("beforeend",`<div class=ov id=tk style="z-index:300"><div class=pop><button class=cl onclick="$('#tk').remove()" aria-label="بند کریں">×</button><div style="font-size:2.6rem">✅</div><b style="font-size:1.25rem;color:#1C352D">${t}</b><p style="margin:6px 0 12px;line-height:2.1">${m}</p><button class="btn wa" onclick="$('#tk').remove()">ٹھیک ہے</button></div></div>`)}
 /* پروڈکٹ کے نیچے کسٹمر کا ریویو فارم (ستارے ہمیشہ 5، صرف نام اور ریویو) */
-function rvForm(p){if(!FBOK())return"";return`<div class=box id=rvf data-p="${esc(p.id)}"><h3 style="margin:0;color:var(--g);font-weight:400;font-size:1.2rem">✍️ اپنا ریویو لکھیں</h3><div class=info style="margin:6px 0 8px">اس پروڈکٹ کے بارے میں اپنا تجربہ ہمارے ساتھ شیئر کریں۔</div><input id=rvn placeholder="آپ کا نام" maxlength=60 autocomplete=name><textarea id=rvt rows=4 placeholder="اپنا ریویو یہاں لکھیں…" maxlength=1500></textarea><input id=rvh tabindex=-1 autocomplete=off aria-hidden=true style="position:absolute;top:0;right:0;width:1px;height:1px;opacity:0;pointer-events:none"><button class="btn wa" id=rvb onclick="rvSend()">📩 ریویو جمع کروائیں</button></div>`}
+function rvForm(p){if(!FBOK())return"";return`<div class=box id=rvf data-p="${esc(p.id)}"><button class="btn lt" id=rvo onclick="rvOpen()">✍️ اپنا ریویو شیئر کریں</button><div id=rvw style="display:none"><h3 style="margin:0;color:var(--g);font-weight:400;font-size:1.2rem">✍️ اپنا ریویو لکھیں</h3><div class=info style="margin:6px 0 8px">اس پروڈکٹ کے بارے میں اپنا تجربہ ہمارے ساتھ شیئر کریں۔</div><input id=rvn placeholder="آپ کا نام" maxlength=60 autocomplete=name><textarea id=rvt rows=4 placeholder="اپنا ریویو یہاں لکھیں…" maxlength=1500></textarea><input id=rvh tabindex=-1 autocomplete=off aria-hidden=true style="position:absolute;top:0;right:0;width:1px;height:1px;opacity:0;pointer-events:none"><button class="btn wa" id=rvb onclick="rvSend()">📩 ریویو جمع کروائیں</button></div></div>`}
+function rvOpen(){const o=$("#rvo"),w=$("#rvw");if(o)o.style.display="none";if(w){w.style.display="block";const n=$("#rvn");if(n)n.focus()}}
+function rvClose(){const o=$("#rvo"),w=$("#rvw");if(w)w.style.display="none";if(o)o.style.display="block"}
 async function rvSend(){const f=$("#rvf");if(!f||$("#rvh").value)return;const n=$("#rvn").value.trim(),t=$("#rvt").value.trim(),p=gp(f.dataset.p);
  if(n.length<2){toast("براہِ کرم اپنا نام لکھیں");return}
  if(t.length<2){toast("براہِ کرم اپنا ریویو لکھیں");return}
  try{if(Date.now()-(+localStorage.getItem("rv_t")||0)<30000){toast("براہِ کرم تھوڑی دیر بعد دوبارہ کوشش کریں");return}}catch(e){}
  const b=$("#rvb");b.disabled=true;b.textContent="⏳ جمع ہو رہا ہے...";
  try{await fbPost("reviews",{n,t,pid:p?p.id:f.dataset.p,pn:p?p.n:"",at:new Date().toISOString()});try{localStorage.setItem("rv_t",Date.now())}catch(e){}
-  $("#rvn").value="";$("#rvt").value="";thanks("آپ کے ریویو کا شکریہ!","آپ کی رائے ہمارے لیے بہت قیمتی ہے۔ ہماری ٹیم کی جانچ کے بعد آپ کا ریویو ویب سائٹ پر شائع کر دیا جائے گا۔")}
+  $("#rvn").value="";$("#rvt").value="";rvClose();thanks("آپ کے ریویو کا شکریہ!","آپ کی رائے ہمارے لیے بہت قیمتی ہے۔ کچھ ہی دیر میں آپ کا ریویو ویب سائٹ پر شائع کر دیا جائے گا۔")}
  catch(e){toast("❌ ریویو جمع نہیں ہو سکا، دوبارہ کوشش کریں")}
  b.disabled=false;b.textContent="📩 ریویو جمع کروائیں"}
 /* سیل ختم ہونے کا کاؤنٹ ڈاؤن */
@@ -202,9 +204,12 @@ function ctStart(){clearInterval(CDT);const e=$("#cdn");if(!e)return;const end=n
   e.innerHTML=`<div>⏰ سیل ختم ہونے میں باقی وقت</div><div class=cdb>${d?`<b>${d}<small>دن</small></b>`:""}<b>${h}<small>گھنٹے</small></b><b>${m}<small>منٹ</small></b><b>${x}<small>سیکنڈ</small></b></div>`};
  tick();CDT=setInterval(tick,1000)}
 function saleCss(){if($("#sls"))return;document.head.insertAdjacentHTML("beforeend",`<style id=sls>
-.sbd{position:absolute;top:6px;right:6px;z-index:2;background:linear-gradient(135deg,#ef3b36,#b71c1c);color:#fff;font:700 .82rem/1.5 'Noto Nastaliq Urdu',serif;padding:3px 11px 1px;border-radius:8px 16px 8px 16px;box-shadow:0 3px 8px #b71c1c66;direction:ltr}
-.pc .pr s.op,.op2{color:#8a8a8a;font-weight:400;font-size:.8rem;text-decoration:line-through}
-.sbd2{display:inline-block;background:linear-gradient(135deg,#ef3b36,#b71c1c);color:#fff;font:700 1rem/1.8 'Noto Nastaliq Urdu',serif;padding:0 14px;border-radius:10px 18px 10px 18px;box-shadow:0 3px 8px #b71c1c55;direction:ltr}
+.sbd{position:absolute;top:8px;right:8px;z-index:2;background:#d32f2f;color:#fff;font:700 .72rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.4px;padding:5px 9px;border-radius:6px;box-shadow:0 2px 6px #0003;direction:ltr}
+.pc .pr s.op,.op2{display:inline-block;color:#9a9a9a;font:500 .85rem system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:line-through;text-decoration-color:#d32f2f;text-decoration-thickness:1.5px;direction:ltr;unicode-bidi:isolate}
+.pbx{display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0}
+.pcut{display:flex;align-items:center;justify-content:center;gap:10px;direction:ltr}
+.pcut .op2{font-size:1.1rem}
+.sbd2{display:inline-block;background:#d32f2f;color:#fff;font:700 .8rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.5px;padding:6px 10px;border-radius:6px;direction:ltr}
 .cdn{margin:10px auto 6px;max-width:380px;background:#fff4f3;border:1.5px solid #e53935;border-radius:16px;padding:4px 10px 8px;color:#b71c1c;font-size:.95rem;line-height:2}
 .cdb{display:flex;justify-content:center;gap:8px;direction:ltr}
 .cdb b{min-width:60px;background:linear-gradient(160deg,#d32f2f,#8e1313);color:#fff;border-radius:10px;font:700 1.35rem/1.25 sans-serif;padding:5px 4px 2px;display:flex;flex-direction:column;align-items:center}
