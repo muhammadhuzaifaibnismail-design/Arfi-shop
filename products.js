@@ -1327,3 +1327,4 @@ const PRODUCTS=[
   "s": "sugar-power-plus"
  }
 ];
+const SITE_DISC={"codes":[{"id":"kmwn9dpqi0","k":"10%OFF","type":"pct","val":10,"max":0,"exp":"","popup":true,"on":true},{"id":"kmwn9dpqi1","k":"ARFI15","type":"pct","val":15,"max":0,"exp":"2026-12-31","popup":false,"on":true}],"sale":{"site":{"on":true,"pct":11,"end":"2026-11-19T23:58"},"items":[]}};
