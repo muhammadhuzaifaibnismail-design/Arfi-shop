@@ -141,3 +141,14 @@ footer{background:var(--g);color:#e8efe2;margin-top:28px;padding:26px 18px 14px;
 /* ===== مزید دکھائیں ===== */
 .rmw{text-align:center;margin:14px}
 .rmw .btn{display:inline-block;width:auto;padding:8px 36px}
+
+/* ===== ریویو سلائیڈر (پروڈکٹ پیج) ===== */
+.rsw{position:relative;padding:0 42px}
+.rsl{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 0;align-items:flex-start;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.rsl::-webkit-scrollbar{display:none}
+.rsl>.rv{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:start}
+@media(min-width:700px){.rsl>.rv{flex-basis:calc(50% - 6px)}}
+.rsb{position:absolute;top:50%;margin-top:-18px;width:36px;height:36px;border-radius:50%;background:var(--g);color:var(--gold);border:1px solid var(--gold);font:700 1.5rem/1 sans-serif;padding:0 0 4px;display:flex;align-items:center;justify-content:center;cursor:pointer;direction:ltr;box-shadow:0 2px 8px #0003;z-index:2}
+.rsb.pv{right:2px}.rsb.nx{left:2px}
+.rsb:disabled{opacity:.3;cursor:default}
+.rsc{text-align:center;color:var(--g);font:600 .85rem/1 sans-serif;direction:ltr;margin:0 0 6px}
