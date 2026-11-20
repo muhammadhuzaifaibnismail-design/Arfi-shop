@@ -194,7 +194,7 @@ const PRODUCTS=[
   "v": [
    [
     "45 گولیاں",
-    120
+    1200
    ]
   ],
   "s": "arfi-antibiotic-tablets",
