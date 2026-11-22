@@ -33,6 +33,8 @@ const PRODUCTS=[
    "c",
    "m",
    "w",
+   "g",
+   "f",
    "o"
   ],
   "v": [
