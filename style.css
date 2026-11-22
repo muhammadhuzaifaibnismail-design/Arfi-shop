@@ -144,7 +144,7 @@ footer{background:var(--g);color:#e8efe2;margin-top:28px;padding:26px 18px 14px;
 
 /* ===== ریویو سلائیڈر (پروڈکٹ پیج) ===== */
 .rsw{position:relative;padding:0 42px}
-.rsl{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 0;align-items:flex-start;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.rsl{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 0;align-items:stretch;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .rsl::-webkit-scrollbar{display:none}
 .rsl>.rv{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:start}
 @media(min-width:700px){.rsl>.rv{flex-basis:calc(50% - 6px)}}
@@ -152,3 +152,8 @@ footer{background:var(--g);color:#e8efe2;margin-top:28px;padding:26px 18px 14px;
 .rsb.pv{right:2px}.rsb.nx{left:2px}
 .rsb:disabled{opacity:.3;cursor:default}
 .rsc{text-align:center;color:var(--g);font:600 .85rem/1 sans-serif;direction:ltr;margin:0 0 6px}
+/* پروڈکٹ ریویو سلائیڈر: تمام خانے برابر، لمبا ریویو "مزید پڑھیں" سے کھلے */
+.rsl>.rv.rvx{display:flex;flex-direction:column}
+.rsl>.rv.rvx .rb2{flex:1 1 auto}
+.rsl>.rv.rvx:not(.open) .rb2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;line-clamp:5;overflow:hidden}
+.rmb{align-self:flex-start;margin:2px 0 4px;padding:3px 14px;background:var(--c);color:var(--g);border:1px solid var(--gold);border-radius:20px;font-weight:600;font-size:.82rem;line-height:1.9;font-family:inherit;cursor:pointer}
