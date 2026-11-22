@@ -3,7 +3,8 @@ const PRODUCTS=[
   "id": "akseer-arfi",
   "n": "اکسیر عارفی کیپسول",
   "c": [
-   "m"
+   "m",
+   "g"
   ],
   "v": [
    [
