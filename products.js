@@ -252,7 +252,8 @@ const PRODUCTS=[
   "c": [
    "c",
    "m",
-   "w"
+   "w",
+   "g"
   ],
   "v": [
    [
