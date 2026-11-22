@@ -1,5 +1,8 @@
 // ===== سائٹ کی ترتیبات =====
 const WA="923111307530",DELIV=400;
+// سائٹ کا بنیادی پتہ (آخر میں / نہ لگائیں)۔ canonical، Open Graph اور شیئر بٹن کے لنک صرف اسی سے بنتے ہیں۔
+// ڈومین بدلنے پر صرف یہ ایک لائن بدلیں، پھر ایڈمن پینل ← بیک اپ ٹیب ← "SEO ٹیگز دوبارہ بنائیں" دبائیں۔
+const SITE_URL="https://muhammadhuzaifaibnismail-design.github.io/Arfi-shop";
 // ڈسکاؤنٹ کوڈ: "کوڈ":{pct:فیصد, exp:"YYYY-MM-DD" یا null}
 // جس کوڈ کے ساتھ popup:true لکھا ہو وہی ہوم پیج کے پاپ اپ میں نظر آئے گا (پاپ اپ کا کوڈ اور فیصد صرف یہیں سے بدلے گا، کسی اور جگہ نہیں)
 const CODES={"10%OFF":{pct:10,exp:null,popup:true},"ARFI15":{pct:15,exp:"2026-12-31"}};
@@ -15,7 +18,7 @@ const _SD=typeof SITE_DISC!=="undefined"&&SITE_DISC?SITE_DISC:null;
 const DCODES=_SD?(_SD.codes||[]):Object.keys(CODES).map(k=>({id:k,k:k.toUpperCase(),type:"pct",val:CODES[k].pct,max:0,exp:CODES[k].exp||"",popup:!!CODES[k].popup,on:true}));
 const DSALE=_SD?(_SD.sale||{}):{};
 // کیٹیگریز: [id, نام, ایموجی, کسٹم لنک]
-const CATS=[["all","تمام ادویات","🌿","all-medicine"],["c","بچوں کی ادویات","🧒","children-medicine"],["m","مردوں کی ادویات","👨","mens-medicine"],["w","عورتوں کی ادویات","👩","womens-medicine"],["s","معدے کی ادویات","🍃","stomach-medicine"],["k","جلد کی ادویات","✨","skin-medicine"]];
+const CATS=[["all","تمام ادویات","🌿","all-medicine"],["c","بچوں کی ادویات","🧒","children-medicine"],["m","مردوں کی ادویات","👨","mens-medicine"],["w","عورتوں کی ادویات","👩","womens-medicine"],["s","معدے کی ادویات","🍃","stomach-medicine"],["k","جلد کی ادویات","✨","skin-medicine"],["d","شوگر و بلڈ پریشر","🩸","sugar-bp-medicine"],["j","جوڑوں اور درد","🦴","joints-pain-medicine"],["g","کمزوری و طاقت","💪","weakness-tonic-medicine"],["f","بخار و موسمی امراض","🌡️","fever-seasonal-medicine"],["o","قدرتی اشیاء","🍯","natural-products"],["u","گردہ و مثانہ","💧","kidney-bladder-medicine"]];
 // باقی صفحات کے کسٹم لنک (پروڈکٹس کے لنک products.js میں ہر پروڈکٹ کے "s" میں ہیں)
 const PG={diseases:"diseases-and-treatments",about:"introduction",terms:"terms-and-conditions",cart:"cart"};
 // پروڈکٹ کے فیڈبیک products.js میں ہر پروڈکٹ کے ساتھ ہیں، اور ہوم پیج کے فیڈبیک home-reviews.js میں (دونوں ایڈمن پینل سے بدلتے ہیں)

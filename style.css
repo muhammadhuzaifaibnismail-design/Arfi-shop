@@ -157,3 +157,7 @@ footer{background:var(--g);color:#e8efe2;margin-top:28px;padding:26px 18px 14px;
 .rsl>.rv.rvx .rb2{flex:1 1 auto}
 .rsl>.rv.rvx:not(.open) .rb2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;line-clamp:5;overflow:hidden}
 .rmb{align-self:flex-start;margin:2px 0 4px;padding:3px 14px;background:var(--c);color:var(--g);border:1px solid var(--gold);border-radius:20px;font-weight:600;font-size:.82rem;line-height:1.9;font-family:inherit;cursor:pointer}
+/* شیئر بٹن */
+.shr{text-align:center}.shr h3{margin:0 0 8px;font-weight:400;color:var(--g);font-size:1.15rem}
+.shr .row2{display:flex;gap:10px}.shr .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:6px 10px}
+.shr .btn svg{width:20px;height:20px;fill:#fff;flex:none}.btn.fb{background:#1877F2;color:#fff}

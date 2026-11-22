@@ -1,5 +1,14 @@
 /* تمام صفحات کا کوڈ یہاں ہے۔ ہر .html فائل اور ہر فولڈر کی index.html ایک ہی خالی ڈھانچہ ہے، صفحہ لنک دیکھ کر خود بنتا ہے */
 lay();
+/* ---- SEO / شیئر کے مددگار (SITE_URL صرف data.js میں ہے) ---- */
+const SU=()=>String(typeof SITE_URL!=="undefined"?SITE_URL:"").replace(/\/+$/,"");
+function seoC(u){try{let l=document.querySelector('link[rel=canonical]');if(!l){l=document.createElement('link');l.rel='canonical';document.head.appendChild(l)}l.href=u}catch(e){}}
+function seoRoute(R){const k=R[0],s=SU();if(!s)return;let u;
+ if(k=='home')u=s+'/';else if(k=='cat'){const c=CATS.find(x=>x[0]==R[1])||CATS[0];u=s+'/'+c[3]}
+ else if(k=='dis')u=s+'/'+PG.diseases;else if(k=='about'||k=='terms'||k=='cart')u=s+'/'+PG[k];else if(k=='rev')u=s+'/reviews';else return;
+ seoC(u)}
+function shareUrl(p){return(SU()?SU()+'/':location.origin+BS())+(p.s||p.id)+'/'}
+function shareSec(p){const u=shareUrl(p);return`<div class="box shr"><h3>شیئر کریں</h3><div class=row2><a class="btn fb" target=_blank rel=noopener href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(u)}">${IC.fb}فیس بک</a><a class="btn wa" target=_blank rel=noopener href="https://wa.me/?text=${encodeURIComponent(p.n+'\n'+u)}">${IC.wa}واٹس ایپ</a></div></div>`}
 let PP=null,vi=0,q=1,code=null,pay='cod';
 const HRV=typeof HOME_RV!=='undefined'?HOME_RV:[];
 /* تمام فیڈبیک: ہوم پیج والے + ہر پروڈکٹ والے (پروڈکٹ کا نام ساتھ) — خود بخود جمع ہوتے ہیں */
@@ -11,11 +20,13 @@ function route(){
  rel=rel.replace(/(^|\/)index\.html$/,'').replace(/\/+$/,'');
  const F={'':['home'],'product.html':['prod',Q.get('id')],'category.html':['cat',Q.get('c')||'all'],'diseases.html':['dis'],'about.html':['about'],'terms.html':['terms'],'cart.html':['cart'],'reviews.html':['rev'],'reviews':['rev']};
  if(F[rel])return F[rel];
+ rel=rel.replace(/\.html$/,'');
  const c=CATS.find(x=>x[3]==rel);if(c)return['cat',c[0]];
  for(const k of ['diseases','about','terms','cart'])if(PG[k]==rel)return[{diseases:'dis'}[k]||k];
  const p=P.find(x=>(x.s||x.id)==rel)||P.find(x=>x.id==rel);
  return p?['prod',p.id]:['nf'];}
 const R=route();
+try{seoRoute(R)}catch(e){}
 ({home,cat,dis,about,terms,cart,prod,nf,rev})[R[0]](R[1]);
 
 function home(){
@@ -53,14 +64,14 @@ $('#m').innerHTML='<h2>شرائط و ضوابط</h2><div class=box><ol style="pa
 function nf(){document.title='صفحہ نہیں ملا | عارفی دارالشفاء';$('#m').innerHTML='<div class=box style=text-align:center><p>معذرت، یہ صفحہ نہیں ملا۔</p><a class=btn href="'+(BS()||'./')+'">ہوم پیج پر جائیں</a></div>'}
 
 /* ---- پروڈکٹ ---- */
-function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.title=PP.n;let m=document.querySelector('meta[name=description]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=PP.md||(PP.n+' — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔');pdraw()}
+function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.title=PP.n;let m=document.querySelector('meta[name=description]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=PP.md||(PP.n+' — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔');try{if(window.SEO&&SU())SEO.apply(document,PP,SU(),{price:x=>sp(PP,x)})}catch(e){}pdraw()}
 function pdraw(){const p=PP,op=p.v[vi][1],S=saleOf(p),pr=S?sp(p,op):op,lb=p.v[vi][0];
 $('#m').innerHTML=`<div class=box style=text-align:center>${p.img?'<img src='+p.img+' alt="" style="width:100%;max-width:360px;border-radius:14px">':"<div style='background:var(--c) url(logo.webp) center/40% no-repeat;aspect-ratio:16/10;border-radius:14px'></div>"}<h1 style='font-weight:400;color:var(--g);font-size:1.6rem'>${p.n}</h1>
 ${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')+'" onclick="vi='+i+';pdraw()">'+(v[0]||(v[1]?fmt(sp(p,v[1])):''))+'</button>').join('')+'</div>':''}
 ${pr?'<div class=pbx><span class=big>'+fmt(pr)+'</span>'+(S?'<div class=pcut><s class=op2>'+fmt(op)+'</s><span class=sbd2>'+S.pct+'% OFF</span></div>':'')+'</div>'+(S&&S.end?'<div class=cdn id=cdn data-e="'+S.end+'"></div>':'')+'<div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
 <p><a class='btn wa' target=_blank href="${wa('میں "'+p.n+'" '+(lb?'('+lb+') ':'')+'× '+q+(pr?' آرڈر کرنا چاہتا ہوں۔ قیمت: '+fmt(pr*q):' کے بارے میں معلومات چاہتا ہوں'))}">واٹس ایپ پر ابھی آرڈر کریں</a></p>
 ${pr?'<button class="btn lt en" onclick="add(PP.id,vi,q)">🛒 Add to Cart</button>':''}</div>
-<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${reviewsSec(p)}${rvForm(p)}${faqSec()}`;ctStart()}
+<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${shareSec(p)}${reviewsSec(p)}${rvForm(p)}${faqSec()}`;ctStart()}
 
 /* ---- کارٹ ---- */
 function cart(){document.title='کارٹ | عارفی دارالشفاء';cdraw()}
