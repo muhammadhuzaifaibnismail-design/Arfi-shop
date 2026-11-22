@@ -105,6 +105,7 @@ const PRODUCTS=[
    "c",
    "m",
    "w",
+   "d",
    "g"
   ],
   "v": [
