@@ -71,7 +71,16 @@ ${lb||p.v.length>1?'<div>'+p.v.map((v,i)=>'<button class="pill '+(i==vi?'on':'')
 ${pr?'<div class=pbx><span class=big>'+fmt(pr)+'</span>'+(S?'<div class=pcut><s class=op2>'+fmt(op)+'</s><span class=sbd2>'+S.pct+'% OFF</span></div>':'')+'</div>'+(S&&S.end?'<div class=cdn id=cdn data-e="'+S.end+'"></div>':'')+'<div class=qty><button onclick="q>1&&(q--,pdraw())">−</button>'+q+'<button onclick="q++,pdraw()">+</button></div>':'<p>قیمت کے لیے واٹس ایپ پر رابطہ کریں</p>'}
 <p><a class='btn wa' target=_blank href="${wa('میں "'+p.n+'" '+(lb?'('+lb+') ':'')+'× '+q+(pr?' آرڈر کرنا چاہتا ہوں۔ قیمت: '+fmt(pr*q):' کے بارے میں معلومات چاہتا ہوں'))}">واٹس ایپ پر ابھی آرڈر کریں</a></p>
 ${pr?'<button class="btn lt en" onclick="add(PP.id,vi,q)">🛒 Add to Cart</button>':''}</div>
-<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${shareSec(p)}${reviewsSec(p)}${rvForm(p)}${faqSec()}`;ctStart()}
+<div class=tr><div><i>🌿</i>100% ہربل</div><div><i>💵</i>کیش آن ڈیلیوری</div><div class=w><i>🚚</i>پورے پاکستان میں فری ہوم ڈیلیوری</div></div>${desc(p)?'<div class="box ds">'+desc(p)+(p.vid?'<p style=text-align:center><a class="btn lt" target=_blank href="'+p.vid+'">▶ ویڈیو دیکھیں</a></p>':'')+'</div>':''}${reviewsSec(p)}${rvForm(p)}${shareSec(p)}${relSec(p)}${faqSec()}`;ctStart()}
+
+/* ---- ملتی جلتی ادویات: اسی زمرے کی اگلی 3 پروڈکٹس (آخر پر پہنچ کر شروع سے مل جاتی ہیں)، دائیں سے بائیں سکرول ---- */
+function relSec(p){
+ const cs=(p.c||[]).filter(x=>x!='all');if(!cs.length)return'';
+ let L=[];for(const c of cs){L=P.filter(x=>(x.c||[]).includes(c));if(L.length>1)break}
+ if(L.length<2)return'';
+ const i=L.findIndex(x=>x.id==p.id),n=L.length,k=Math.min(3,n-1),R=[];
+ for(let j=1;j<=k;j++)R.push(L[(i+j)%n]);
+ return`<div class=rel>${secHead('ملتی جلتی ادویات','اسی زمرے کی دیگر مفید ادویات')}`+(R.length>1?`<div class=rsw><button type=button class="rsb pv" aria-label="پچھلی دوا" onclick="rsGo(this,-1)" disabled>»</button><div class="rsl rl2" onscroll="rsUp(this)">${R.map(x=>card(x)).join('')}</div><button type=button class="rsb nx" aria-label="اگلی دوا" onclick="rsGo(this,1)">«</button></div>`:`<div class=grid style="grid-template-columns:repeat(2,1fr)">${R.map(x=>card(x)).join('')}</div>`)+'</div>'}
 
 /* ---- کارٹ ---- */
 function cart(){document.title='کارٹ | عارفی دارالشفاء';cdraw()}

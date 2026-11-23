@@ -2,7 +2,7 @@
 const WA="923111307530",DELIV=400;
 // سائٹ کا بنیادی پتہ (آخر میں / نہ لگائیں)۔ canonical، Open Graph اور شیئر بٹن کے لنک صرف اسی سے بنتے ہیں۔
 // ڈومین بدلنے پر صرف یہ ایک لائن بدلیں، پھر ایڈمن پینل ← بیک اپ ٹیب ← "SEO ٹیگز دوبارہ بنائیں" دبائیں۔
-const SITE_URL="https://muhammadhuzaifaibnismail-design.github.io/Arfi-shop";
+const SITE_URL="https://www.arfidarushifa.pk";
 // ڈسکاؤنٹ کوڈ: "کوڈ":{pct:فیصد, exp:"YYYY-MM-DD" یا null}
 // جس کوڈ کے ساتھ popup:true لکھا ہو وہی ہوم پیج کے پاپ اپ میں نظر آئے گا (پاپ اپ کا کوڈ اور فیصد صرف یہیں سے بدلے گا، کسی اور جگہ نہیں)
 const CODES={"10%OFF":{pct:10,exp:null,popup:true},"ARFI15":{pct:15,exp:"2026-12-31"}};

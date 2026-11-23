@@ -161,3 +161,11 @@ footer{background:var(--g);color:#e8efe2;margin-top:28px;padding:26px 18px 14px;
 .shr{text-align:center}.shr h3{margin:0 0 8px;font-weight:400;color:var(--g);font-size:1.15rem}
 .shr .row2{display:flex;gap:10px}.shr .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:6px 10px}
 .shr .btn svg{width:20px;height:20px;fill:#fff;flex:none}.btn.fb{background:#1877F2;color:#fff}
+
+/* ===== ملتی جلتی ادویات (پروڈکٹ پیج) ===== */
+.rel{position:relative;margin:26px 0 0;padding-top:4px}
+.rel:before{content:"";position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.rel .rsl{gap:12px;padding:12px 0 14px;scroll-snap-type:x mandatory}
+.rel .rsl>.pc{flex:0 0 calc(50% - 6px);scroll-snap-align:start;min-width:0}
+@media(min-width:700px){.rel .rsl>.pc{flex-basis:calc(33.333% - 8px)}}
+.rel .rsb{top:42%}
