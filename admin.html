@@ -88,15 +88,15 @@ async function sv(){const n=$("#n").value.trim();if(!n){toast("نام لکھیں
   if(oldImg&&oldImg!==p.img&&!L.some(x=>x.img===oldImg)){try{const d=await gh(oldImg);await gh(oldImg,"DELETE",{message:"remove old image "+oldImg,branch:cfg.br,sha:d.sha})}catch(e){}}toast("✅ محفوظ ہو گیا — 1 سے 2 منٹ میں سائٹ پر نظر آئے گا");list()}catch(e){toast("❌ "+e.message)}}
 async function del(){if(!confirm("یہ پروڈکٹ مستقل حذف ہو جائے گی۔ ٹھیک ہے؟"))return;try{const n=L[cur].n;L.splice(cur,1);await save("delete "+n);toast("🗑 حذف ہو گئی");list()}catch(e){toast("❌ "+e.message)}}
 /* ================= ٹیبز اور نئے شعبے ================= */
-const TABS=[["p","🛍 پروڈکٹس"],["r","⭐ ریویوز"],["o","📦 آرڈرز"],["c","🩺 مشورے"],["d","🏷 ڈسکاؤنٹ"],["b","💾 بیک اپ"]];
-let CT_="p",BD={r:0,o:0,c:0},FBC=null,FT=null,FE=0,FR="",RSUB="n",PRV=[],INB={},DS=null,UC={},CE=-1,RL=[];
+const TABS=[["p","🛍 پروڈکٹس"],["r","⭐ ریویوز"],["o","📦 آرڈرز"],["c","🩺 مشورے"],["l","📋 VIP لسٹ"],["d","🏷 ڈسکاؤنٹ"],["b","💾 بیک اپ"]];
+let CT_="p",BD={r:0,o:0,c:0,l:0},FBC=null,FT=null,FE=0,FR="",RSUB="n",PRV=[],INB={},DS=null,UC={},CE=-1,RL=[];
 try{FR=localStorage.getItem("adm_fb")||""}catch(e){}
 const LOADING='<div class=box><div class=info>⏳ لوڈ ہو رہا ہے...</div></div>';
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const fdt=s=>{try{return new Date(s).toLocaleString("en-GB",{hour12:true})}catch(e){return s||""}};
 function tbar(){const e=$("#tbs");if(e)e.innerHTML=TABS.map(x=>`<button class="tb ${x[0]==CT_?"on":""}" onclick="tab('${x[0]}')">${x[1]}${BD[x[0]]?`<i>${BD[x[0]]}</i>`:""}</button>`).join("")}
 function ensure(t){CT_=t;if(!$("#tc"))$("#a").innerHTML="<div id=tbs class=tabs></div><div id=tc></div>";tbar()}
-function tab(t){({p:()=>list(),r:()=>revTab(),o:()=>inbox("orders"),c:()=>inbox("consults"),d:()=>discTab(),b:()=>bkTab()})[t]()}
+function tab(t){({p:()=>list(),r:()=>revTab(),o:()=>inbox("orders"),c:()=>inbox("consults"),l:()=>leadTab(),d:()=>discTab(),b:()=>bkTab()})[t]()}
 
 /* ---- Firebase ---- */
 async function fbCfg(){if(FBC)return FBC;try{const t=await(await fetch("data.js?t="+Date.now())).text(),m=t.match(/const FB=(\{[^}]*\})/);FBC=m?new Function("return "+m[1])():{}}catch(e){FBC={}}return FBC}
@@ -114,7 +114,7 @@ const FBSET='<div class=box><h3 style=margin-top:0>⚙️ Firebase سیٹ اپ �
 const FBLOGIN='<div class=box><h3 style=margin-top:0>🔐 ایڈمن لاگ اِن (Firebase)</h3><label>ای میل</label><input id=fe dir=ltr type=email autocomplete=username><label>پاس ورڈ</label><input id=fp dir=ltr type=password autocomplete=current-password><button class="btn wa" style=margin-top:8px onclick=fbDo()>داخل ہوں</button><div class=info style=margin-top:8px>یہ وہی ای میل اور پاس ورڈ ہے جو آپ نے Firebase میں ایڈمن کے لیے بنایا۔</div></div>';
 const fbGate=s=>s=="cfg"?FBSET:FBLOGIN;
 async function fbDo(){try{await fbSignIn($("#fe").value.trim(),$("#fp").value);toast("✅ لاگ اِن ہو گیا");badges();tab(CT_)}catch(e){toast("❌ "+e.message)}}
-async function badges(){try{await fbCfg();if(!(FBC.db&&FBC.key&&(FT||FR)))return;for(const [k,n] of [["reviews","r"],["orders","o"],["consults","c"]]){const d=await fbq(k+"?shallow=true");BD[n]=d?Object.keys(d).length:0}tbar()}catch(e){}}
+async function badges(){try{await fbCfg();if(!(FBC.db&&FBC.key&&(FT||FR)))return;for(const [k,n] of [["reviews","r"],["orders","o"],["consults","c"],["launch_leads","l"]]){const d=await fbq(k+"?shallow=true");BD[n]=d?Object.keys(d).length:0}tbar()}catch(e){}}
 
 /* ---- آرڈرز اور صحت کے مشورے ---- */
 const ibx=k=>k=="orders"?"o":"c";
@@ -198,6 +198,43 @@ async function cdSave(){const k=$("#cdk").value.trim().toUpperCase().replace(/\s
  let exp="";if(m=="d"){const n=Math.floor(Number($("#cdd").value));if(!(n>0)){toast("دنوں کی تعداد لکھیں");return}const d=new Date();d.setDate(d.getDate()+n-1);exp=ymd(d)}else if(m=="t"){exp=$("#cdx").value;if(!exp){toast("تاریخ منتخب کریں");return}}
  const o={id:CE>=0?DS.codes[CE].id:"c"+Date.now().toString(36),k,type,val,max,exp,popup:$("#cdp").checked,on:CE>=0?DS.codes[CE].on!==false:true};
  const old=JSON.stringify(DS);if(o.popup)DS.codes.forEach(x=>x.popup=false);if(CE>=0)DS.codes[CE]=o;else DS.codes.push(o);await dsave("discount code "+k,old)}
+
+/* ---- VIP لسٹ (کمنگ سون پیج کا فارم) ---- */
+let LD={},LMSG="";
+const LDEF="السلام علیکم {name}! 🎁\nعارفی دارالشفاء کی طرف سے آپ کے لیے خاص آفر:\n\n(یہاں آفر کی تفصیل لکھیں)\n\nآرڈر کے لیے ویب سائٹ: https://www.arfidarushifa.pk\nشکریہ 🌿";
+const lids=()=>Object.keys(LD).sort((a,b)=>(LD[b].t||0)-(LD[a].t||0));
+const lmsg=()=>{const e=$("#lmsg");return e?e.value:(LMSG||LDEF)};
+const lwa=(p,n)=>"https://wa.me/"+p+"?text="+encodeURIComponent(lmsg().replace(/\{name\}/g,n||""));
+const lloc=p=>{const l="0"+String(p).slice(2);return l.slice(0,4)+"-"+l.slice(4)};
+const lint=p=>"+92 "+String(p).slice(2,5)+" "+String(p).slice(5);
+async function leadTab(){ensure("l");$("#tc").innerHTML=LOADING;
+ const st=await fbReady();if(st!="ok"){$("#tc").innerHTML=fbGate(st);return}
+ try{LD=await fbq("launch_leads")||{};try{LMSG=localStorage.getItem("adm_offer")||""}catch(e){}leadDraw()}
+ catch(e){$("#tc").innerHTML=`<div class=box><div class=info>❌ ${esc(e.message)}</div></div>`}}
+function leadCard(id){const r=LD[id];return`<div class=oc id="l_${id}"><div class=oh><b>${esc(r.n||"")}</b><bdi dir=ltr>${esc(lloc(r.p||id))}</bdi><span class=chip id="ls_${id}" style="${r.s?"":"display:none"}">✅ پیغام بھیجا جا چکا</span><small>${fdt(r.t)}</small></div><div class=row><button class="btn wa" onclick="leadOne('${id}')">💬 واٹس ایپ پیغام</button><button class="btn red" onclick="leadDel('${id}')">🗑 ڈیلیٹ</button></div></div>`}
+function leadDraw(){const ids=lids(),left=ids.filter(i=>!LD[i].s).length;BD.l=ids.length;tbar();
+ $("#tc").innerHTML=`<div class=box><h3 style=margin-top:0>📋 VIP لسٹ (${ids.length})</h3><div class=info>کمنگ سون پیج پر جو لوگ نام اور واٹس ایپ نمبر جمع کرواتے ہیں وہ یہاں آتے ہیں۔ ایک نمبر ایک ہی بار آ سکتا ہے۔</div>
+<div class=row style=margin-top:8px><button class="btn lt" onclick=leadCopy()>📋 تمام نمبر کاپی</button><button class="btn lt" onclick=leadCsv()>⬇️ CSV ڈاؤن لوڈ</button><button class="btn lt" onclick=leadTab()>🔄 ریفریش</button></div></div>
+<div class=box><h3 style=margin-top:0>📣 آفر کا پیغام بھیجیں</h3><div class=info>نیچے آفر لکھیں۔ جہاں {name} لکھا ہوگا وہاں ہر کسٹمر کا نام خود آ جائے گا۔ نیچے والا سبز بٹن دبائیں تو اگلے کسٹمر کی واٹس ایپ چیٹ پیغام کے ساتھ کھل جائے گی، آپ صرف سینڈ دبائیں۔ ہر کسٹمر کے لیے الگ ایک ٹیپ لگتا ہے (واٹس ایپ ایک کلک میں سب کو خود بخود نہیں بھیجنے دیتا)۔</div>
+<textarea id=lmsg oninput=leadSaveMsg()>${esc(LMSG||LDEF)}</textarea>
+<button class="btn wa" onclick=leadNext()>▶️ اگلے کسٹمر کو بھیجیں (باقی <span id=lleft>${left}</span>)</button>
+<button class="btn lt" style=margin-top:6px onclick=leadReset()>↩️ "بھیجا جا چکا" کی نشانیاں صاف کریں</button></div>
+<div class=box><h3 style=margin-top:0>👥 تمام کسٹمرز</h3>${ids.length?ids.map(leadCard).join(""):"<div class=info>ابھی کوئی نام جمع نہیں ہوا۔</div>"}</div>`}
+function leadSaveMsg(){LMSG=lmsg();try{localStorage.setItem("adm_offer",LMSG)}catch(e){}}
+function leadNext(){const id=lids().reverse().find(i=>!LD[i].s);if(!id){toast("✅ سب کو پیغام بھیجا جا چکا ہے");return}leadOne(id)}
+function leadOne(id){const r=LD[id];if(!r)return;window.open(lwa(r.p||id,r.n),"_blank");leadMark(id)}
+async function leadMark(id){try{await fbq("launch_leads/"+id+"/s","PUT",true);LD[id].s=true;const c=$("#ls_"+id);if(c)c.style.display="";const l=$("#lleft");if(l)l.textContent=lids().filter(i=>!LD[i].s).length}catch(e){toast("❌ "+e.message)}}
+async function leadReset(){if(!confirm("تمام نشانیاں صاف ہو جائیں گی تاکہ نئی آفر سب کو دوبارہ بھیجی جا سکے۔ جاری رکھیں؟"))return;
+ try{for(const id of lids())if(LD[id].s){await fbq("launch_leads/"+id+"/s","DELETE");delete LD[id].s}leadDraw();toast("✅ صاف ہو گئیں")}catch(e){toast("❌ "+e.message)}}
+async function leadDel(id){if(!confirm("یہ کسٹمر لسٹ سے مستقل ڈیلیٹ ہو جائے گا۔ جاری رکھیں؟"))return;
+ try{await fbq("launch_leads/"+id,"DELETE");delete LD[id];leadDraw();toast("🗑 ڈیلیٹ ہو گیا")}catch(e){toast("❌ "+e.message)}}
+async function leadCopy(){const t=lids().reverse().map(i=>(LD[i].n||"")+" - "+lint(LD[i].p||i)).join("\n");let ok=false;
+ try{await navigator.clipboard.writeText(t);ok=true}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{ok=document.execCommand("copy")}catch(x){}a.remove()}
+ toast(ok?"✅ "+lids().length+" نمبر کاپی ہو گئے":"❌ کاپی نہیں ہو سکا")}
+function leadCsv(){const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+ const rows=[["Name","Phone","WhatsApp (intl)","Date"]].concat(lids().reverse().map(i=>{const r=LD[i];return[r.n,lloc(r.p||i),lint(r.p||i),r.t?new Date(r.t).toLocaleString("en-GB"):""]}));
+ const b=new Blob(["\ufeff"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(b);a.download="vip-leads.csv";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
 
 /* ---- بیک اپ ٹیب ---- */
 function bkTab(){ensure("b");$("#tc").innerHTML=`<div class=box><h3 style=margin-top:0>💾 بیک اپ</h3><div class=info>تمام پروڈکٹس، فیڈبیک، ڈسکاؤنٹ سیٹنگز اور تصویریں ایک فائل میں محفوظ ہوتی ہیں۔</div><div class=row style=margin-top:8px><button class="btn lt" onclick=backup()>⬇️ بیک اپ ڈاؤن لوڈ</button><button class="btn lt" onclick="$('#rf').click()">⬆️ بیک اپ بحال کریں</button></div><input id=rf type=file accept=".json,application/json" style=display:none onchange="restore(this)"><button class="btn lt" style=margin-top:12px onclick="localStorage.removeItem('adm');localStorage.removeItem('adm_fb');cfg={};login()">لاگ آؤٹ</button></div><div class=box><h3 style=margin-top:0>🔗 SEO اور سائٹ کا پتہ</h3><div class=info>canonical، Open Graph اور JSON-LD ٹیگز data.js کی SITE_URL سے بنتے ہیں۔ نئی یا ایڈٹ کی ہوئی پروڈکٹ کے ٹیگز خود بن جاتے ہیں۔ ڈومین بدلنے کے بعد (data.js میں SITE_URL بدل کر) یہ بٹن دبائیں۔</div><button class="btn lt" style=margin-top:8px onclick=regenSeo()>🔄 SEO ٹیگز دوبارہ بنائیں</button></div>`}
