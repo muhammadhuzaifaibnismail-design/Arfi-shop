@@ -38,12 +38,12 @@ function lay(){
  document.body.insertAdjacentHTML("beforeend",`<footer><div class=ft>
  <div class=ft-tr><div><i>💵</i><span><b>کیش آن ڈیلیوری</b><small>وصول کر کے ادائیگی</small></span></div><div><i>🚚</i><span><b>فری ہوم ڈیلیوری</b><small>پورے پاکستان میں</small></span></div><div><i>🌿</i><span><b>100% ہربل</b><small>خالص جڑی بوٹیاں</small></span></div><div><i>✅</i><span><b>محفوظ پیکنگ</b><small>جانچ کے بعد روانگی</small></span></div></div>
  <div class=ft-mn>
- <div class=ft-br><img src=logo.webp alt="عارفی دارالشفاء"><p>خالص جڑی بوٹیوں سے تیار کردہ ادویات، پورے پاکستان میں ہوم ڈیلیوری کے ساتھ۔</p><div class=ft-so>${so(wa("I'm From www.arfidarushifa.pk"),"wa","WhatsApp")}${so("https://www.facebook.com/arfidarushifa/","fb","Facebook")}${so("https://www.instagram.com/arfidarushifa/","ig","Instagram")}${so("https://www.tiktok.com/@arfi_darushifa","tt","TikTok")}</div></div>
- <div class=ft-cat><h4>ادویات کی اقسام</h4><div class=ft-cl>${CATS.map(c=>`<a href="${cu(c)}">${c[2]} ${c[1]}</a>`).join("")}<a href="${gu('diseases')}">📖 بیماریاں اور علاج</a></div></div>
+ <div class=ft-br><img src=logo.webp alt="عارفی دارالشفاء"><p>خالص جڑی بوٹیوں سے تیار کردہ ادویات، پورے پاکستان میں ہوم ڈیلیوری کے ساتھ۔</p><div class=ft-so>${so(wa("I'm from arfidarushifa.pk"),"wa","WhatsApp")}${so("https://www.facebook.com/arfidarushifa/","fb","Facebook")}${so("https://www.instagram.com/arfidarushifa/","ig","Instagram")}${so("https://www.tiktok.com/@arfi_darushifa","tt","TikTok")}</div></div>
+ <div class=ft-cat><h4>ادویات کی اقسام</h4><div class=ft-cl>${CATS.map(c=>`<a href="${cu(c)}">${c[2]} ${c[1]}</a>`).join("")}</div></div>
  <div class=ft-ln><h4>معلومات</h4><a href="${gu('about')}">ہمارا تعارف</a><a href="${gu('diseases')}">بیماریاں اور علاج</a><a href="${gu('terms')}">شرائط و ضوابط</a><a href="${gu('cart')}">میرا کارٹ</a></div>
- <div class=ft-ct><h4>رابطہ</h4><a class=wb href="${wa("میں آپ سے رابطہ کرنا چاہتا ہوں")}" target=_blank rel=noopener>${IC.wa}<bdi dir=ltr>0311-1307530</bdi></a><div class=tm>🕘 ہفتہ تا جمعرات<br>صبح 9 تا شام 5 بجے</div></div>
+ <div class=ft-ct><h4>رابطہ</h4><a class=wb href="${wa("I'm from arfidarushifa.pk")}" target=_blank rel=noopener>${IC.wa}<bdi dir=ltr>0311-1307530</bdi></a><div class=tm>🕘 ہفتہ تا جمعرات<br>صبح 9 تا شام 5 بجے</div></div>
  </div>
- <div class=ft-bt><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div><button type=button onclick="scrollTo({top:0,behavior:'smooth'})">⬆ اوپر جائیں</button></div></div></footer><button type=button class=fab id=hf aria-label="اپنی صحت کے متعلق مشورہ کریں">اپنی صحت کے متعلق مشورہ کریں</button><div id=toast></div>`);
+ <div class=ft-bt><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div><button type=button onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆ اوپر جائیں</button></div></div></footer><button type=button class=fab id=hf aria-label="اپنی صحت کے متعلق مشورہ کریں">اپنی صحت کے متعلق مشورہ کریں</button><div id=toast></div>`);
  badge();search();hfInit();saleCss();
  try{const pc=popCode();if(pc&&!sessionStorage.getItem("pp")){sessionStorage.setItem("pp",1);setTimeout(()=>popup(pc),800)}}catch(e){}}
 const popCode=()=>{if(siteSaleOn())return null;return DCODES.find(c=>c.popup&&c.on!==false&&!(c.exp&&new Date(c.exp+"T23:59:59")<new Date()))||null};
