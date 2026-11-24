@@ -201,7 +201,7 @@ async function cdSave(){const k=$("#cdk").value.trim().toUpperCase().replace(/\s
 
 /* ---- VIP لسٹ (کمنگ سون پیج کا فارم) ---- */
 let LD={},LMSG="";
-const LDEF="السلام علیکم {name}! 🎁\nعارفی دارالشفاء کی طرف سے آپ کے لیے خاص آفر:\n\n(یہاں آفر کی تفصیل لکھیں)\n\nآرڈر کے لیے ویب سائٹ: https://www.arfidarushifa.pk\nشکریہ 🌿";
+const LDEF="السلام علیکم {name}! 🌿\nآپ نے ہمیں اپنا نمبر اس لیے دیا تھا کہ ہر نئی بات سب سے پہلے آپ کو بتائی جائے، اس لیے سب سے پہلے آپ ہی کو بتا رہے ہیں 😊\n\nعارفی دارالشفاء کی نئی ویب سائٹ لانچ ہو رہی ہے، اور آپ کے لیے ہے ایک زبردست لکی ڈرا آفر! 🎁\n\n⏰ آفر کا وقت: 25 نومبر صبح 11 بجے سے 26 نومبر صبح 11 بجے تک (24 گھنٹے)\n\nحاصل کرنے کا طریقہ بہت آسان ہے:\n1️⃣ ہماری ویب سائٹ کھولیں: https://www.arfidarushifa.pk\n2️⃣ سامنے آنے والے پاپ اپ میں «پہیہ گھمائیں» کا بٹن دبائیں 🎰\n3️⃣ جو ڈسکاؤنٹ نکلے گا (10% سے 50% تک) وہ اگلے 1 گھنٹے کے لیے آپ کا ہو جائے گا ✅\n4️⃣ اسی ایک گھنٹے میں اپنی پسند کی پروڈکٹس کارٹ میں ڈال کر آرڈر کریں۔ ہر پروڈکٹ پر ڈسکاؤنٹ خود بخود لگ جائے گا، اور ٹائمر پروڈکٹ کے پیج پر چلتا نظر آئے گا ⏳\n\n🎁🎁 خصوصی سرپرائز: سب سے پہلے جو 3 آرڈرز آئیں گے، ان کے ساتھ ایک انتہائی انوکھا سرپرائز گفٹ بھی بھیجا جائے گا! اس لیے جیسے ہی 11 بجیں، فوراً ویب سائٹ پر جائیں، پہیہ گھمائیں اور اپنا آرڈر پلیس کریں تاکہ سب سے پہلے آپ کو سرپرائز گفٹ مل سکے 🏃💨\n\n📌 ضروری باتیں:\n• ہر موبائل پر پہیہ صرف ایک بار گھومتا ہے، اس لیے پہلے اپنی پسند کی پروڈکٹس دیکھ لیں، پھر پہیہ گھمائیں\n• پاپ اپ بند ہو جائے تو نیچے «🎁 لکی ڈرا کھیلیں» کا بٹن موجود رہتا ہے\n• ڈسکاؤنٹ صرف 1 گھنٹے کے لیے ہے، اس کے بعد ختم ہو جائے گا\n• 🚚 Rs. 2,000 یا زائد کے آرڈر پر ہوم ڈیلیوری فری (اس سے کم پر Rs. 350 ڈیلیوری چارجز)\n\nتو دیر کس بات کی؟ گھڑی دیکھتے رہیں، 11 بجتے ہی ملاقات ویب سائٹ پر! 😄\nشکریہ — عارفی دارالشفاء 🌿";
 const lids=()=>Object.keys(LD).sort((a,b)=>(LD[b].t||0)-(LD[a].t||0));
 const lmsg=()=>{const e=$("#lmsg");return e?e.value:(LMSG||LDEF)};
 const lwa=(p,n)=>"https://wa.me/"+p+"?text="+encodeURIComponent(lmsg().replace(/\{name\}/g,n||""));
@@ -209,7 +209,7 @@ const lloc=p=>{const l="0"+String(p).slice(2);return l.slice(0,4)+"-"+l.slice(4)
 const lint=p=>"+92 "+String(p).slice(2,5)+" "+String(p).slice(5);
 async function leadTab(){ensure("l");$("#tc").innerHTML=LOADING;
  const st=await fbReady();if(st!="ok"){$("#tc").innerHTML=fbGate(st);return}
- try{LD=await fbq("launch_leads")||{};try{LMSG=localStorage.getItem("adm_offer")||""}catch(e){}leadDraw()}
+ try{LD=await fbq("launch_leads")||{};try{LMSG=localStorage.getItem("adm_offer2")||""}catch(e){}leadDraw()}
  catch(e){$("#tc").innerHTML=`<div class=box><div class=info>❌ ${esc(e.message)}</div></div>`}}
 function leadCard(id){const r=LD[id];return`<div class=oc id="l_${id}"><div class=oh><b>${esc(r.n||"")}</b><bdi dir=ltr>${esc(lloc(r.p||id))}</bdi><span class=chip id="ls_${id}" style="${r.s?"":"display:none"}">✅ پیغام بھیجا جا چکا</span><small>${fdt(r.t)}</small></div><div class=row><button class="btn wa" onclick="leadOne('${id}')">💬 واٹس ایپ پیغام</button><button class="btn red" onclick="leadDel('${id}')">🗑 ڈیلیٹ</button></div></div>`}
 function leadDraw(){const ids=lids(),left=ids.filter(i=>!LD[i].s).length;BD.l=ids.length;tbar();
@@ -220,7 +220,7 @@ function leadDraw(){const ids=lids(),left=ids.filter(i=>!LD[i].s).length;BD.l=id
 <button class="btn wa" onclick=leadNext()>▶️ اگلے کسٹمر کو بھیجیں (باقی <span id=lleft>${left}</span>)</button>
 <button class="btn lt" style=margin-top:6px onclick=leadReset()>↩️ "بھیجا جا چکا" کی نشانیاں صاف کریں</button></div>
 <div class=box><h3 style=margin-top:0>👥 تمام کسٹمرز</h3>${ids.length?ids.map(leadCard).join(""):"<div class=info>ابھی کوئی نام جمع نہیں ہوا۔</div>"}</div>`}
-function leadSaveMsg(){LMSG=lmsg();try{localStorage.setItem("adm_offer",LMSG)}catch(e){}}
+function leadSaveMsg(){LMSG=lmsg();try{localStorage.setItem("adm_offer2",LMSG)}catch(e){}}
 function leadNext(){const id=lids().reverse().find(i=>!LD[i].s);if(!id){toast("✅ سب کو پیغام بھیجا جا چکا ہے");return}leadOne(id)}
 function leadOne(id){const r=LD[id];if(!r)return;window.open(lwa(r.p||id,r.n),"_blank");leadMark(id)}
 async function leadMark(id){try{await fbq("launch_leads/"+id+"/s","PUT",true);LD[id].s=true;const c=$("#ls_"+id);if(c)c.style.display="";const l=$("#lleft");if(l)l.textContent=lids().filter(i=>!LD[i].s).length}catch(e){toast("❌ "+e.message)}}
