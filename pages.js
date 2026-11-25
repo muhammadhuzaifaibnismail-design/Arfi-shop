@@ -18,6 +18,7 @@ function route(){
  try{rel=decodeURIComponent(location.pathname)}catch(e){rel=location.pathname}
  if(rel+'/'==BASE)rel='';else if(rel.startsWith(BASE))rel=rel.slice(BASE.length);else rel=rel.replace(/^\//,'');
  rel=rel.replace(/(^|\/)index\.html$/,'').replace(/\/+$/,'');
+ const tk=rel.match(/^tracking(?:\.html)?(?:\/(.*))?$/i);if(tk)return['trk',tk[1]||Q.get('no')||''];
  const F={'':['home'],'product.html':['prod',Q.get('id')],'category.html':['cat',Q.get('c')||'all'],'diseases.html':['dis'],'about.html':['about'],'terms.html':['terms'],'cart.html':['cart'],'reviews.html':['rev'],'reviews':['rev']};
  if(F[rel])return F[rel];
  rel=rel.replace(/\.html$/,'');
@@ -27,7 +28,7 @@ function route(){
  return p?['prod',p.id]:['nf'];}
 const R=route();
 try{seoRoute(R)}catch(e){}
-({home,cat,dis,about,terms,cart,prod,nf,rev})[R[0]](R[1]);
+({home,cat,dis,about,terms,cart,prod,nf,rev,trk})[R[0]](R[1]);
 
 function home(){
  let t=P.map((p,i)=>[p,(p.r||[]).length,i]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).slice(0,6).map(x=>x[0]);
@@ -63,6 +64,59 @@ $('#m').innerHTML='<h2>شرائط و ضوابط</h2><div class=box><ol style="pa
 
 function nf(){document.title='صفحہ نہیں ملا | عارفی دارالشفاء';$('#m').innerHTML='<div class=box style=text-align:center><p>معذرت، یہ صفحہ نہیں ملا۔</p><a class=btn href="'+(BS()||'./')+'">ہوم پیج پر جائیں</a></div>'}
 
+/* ---- آرڈر ٹریکنگ: /tracking اور /tracking/Arfi-0112123 (ڈیٹا: Firestore کا public_tracking، صرف REST GET) ---- */
+function trk(q0){
+ const PRJ='arfi-darushifa',KEY='AIzaSyBOFklRCUWWgXlMXXqOE3-P3jpUb1_kcdc',
+ SS=['بک','ڈسپیچ','ڈسپیچ ارائیوڈ','ڈیلیور'],RET='ریٹرن',
+ TT=['آرڈر پیک ہو گیا','پارسل روانہ ہو گیا','پارسل آپ کے شہر پہنچ گیا','پارسل آپ کو مل گیا'],
+ TI=['📦','🚚','📍','✅'],
+ E=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'),
+ RX=/^Arfi-(0[1-9]|[12]\d|3[01])(0[1-9]|1[0-2])\d+$/;
+ document.title='اپنا آرڈر ٹریک کریں | عارفی دارالشفاء';
+ let mt=document.querySelector('meta[name=robots]');if(!mt){mt=document.createElement('meta');mt.name='robots';document.head.appendChild(mt)}mt.content='noindex,nofollow';
+ let tok=0,cur='';
+ const norm=v=>{const t=String(v||'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/arfi/ig,''),g=t.replace(/\D/g,'');return g?'Arfi-'+g:''},
+ fd=v=>{if(!v)return'';try{const s=String(v);if(s.length<=10){const d=new Date(s+'T00:00:00Z');return isNaN(d)?s:d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'})}
+  const d=new Date(s);if(isNaN(d))return s;return d.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true,timeZone:'Asia/Karachi'}).replace(/\b(am|pm)\b/i,m=>m.toUpperCase())}catch(e){return String(v)}},
+ bd=v=>v?'<bdi dir=ltr>'+E(fd(v))+'</bdi>':'',
+ sv=f=>f&&f.stringValue!=null?f.stringValue:'',
+ parse=j=>{const f=j.fields||{},m=(f.ts&&f.ts.mapValue&&f.ts.mapValue.fields)||{},ts={};Object.keys(m).forEach(k=>{ts[k]=sv(m[k])});return{no:sv(f.no),status:sv(f.status),city:sv(f.city),self:!!(f.self&&f.self.booleanValue),courier:sv(f.courier),ct:sv(f.courierTracking),ts,up:sv(f.updatedAt)}},
+ waB=no=>`<a class="btn wa" target=_blank rel=noopener href="${wa('میں اپنے آرڈر '+no+' کے بارے میں معلومات چاہتا ہوں')}">${IC.wa}واٹس ایپ پر رابطہ کریں</a>`,
+ cpB=t=>t?`<button type=button class=trk-cp data-c="${E(t)}">📋 کاپی</button>`:'',
+ nfH=no=>`<div class="box trk-nf"><div style="font-size:2.2rem">🔍</div><p>یہ آرڈر نمبر نہیں ملا — درست نمبر لکھیں یا واٹس ایپ پر رابطہ کریں</p>${waB(no||'')}</div>`,
+ erH=()=>`<div class="box trk-nf"><div style="font-size:2.2rem">⚠️</div><p>معذرت، اس وقت آرڈر کی معلومات حاصل نہیں ہو سکیں۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</p><button type=button class=btn id=trr style="display:inline-block;width:auto;padding:8px 24px">🔄 دوبارہ کوشش کریں</button></div>`,
+ dsc=(k,t)=>{const x=bd(t);return k==0?(x?`آپ کا آرڈر ${x} کو پیک کر دیا گیا ہے۔`:'آپ کا آرڈر پیک کر دیا گیا ہے۔'):k==1?(x?`آپ کا پارسل ${x} کو روانہ کیا گیا۔`:'آپ کا پارسل روانہ کیا گیا۔'):x},
+ draw=d=>{const i=SS.indexOf(d.status),ret=d.status==RET,self=d.self&&!!d.courier;
+  let h=`<div class="box trk-h"><div><small>آرڈر نمبر</small><b dir=ltr>${E(d.no)}</b></div><div><small>منزل</small><b>${E(d.city)||'—'}</b></div></div>`;
+  if(ret)h+=`<div class="box trk-cur ret"><i>↩️</i><div><small>موجودہ صورتحال</small><b>پارسل واپس آ چکا ہے</b></div></div><div class="box trk-nf"><p>یہ پارسل واپس آ چکا ہے۔ مزید معلومات کے لیے براہِ کرم واٹس ایپ پر رابطہ کریں۔</p>${waB(d.no)}</div>`;
+  else if(i<0)h+=`<div class="box trk-cur"><i>📦</i><div><small>موجودہ صورتحال</small><b>${E(d.status)}</b></div></div>`;
+  else{
+   h+=`<div class="box trk-cur"><i>${TI[i]}</i><div><small>موجودہ صورتحال</small><b>${TT[i]}</b></div></div>`;
+   if(i==2)h+=self?`<div class="box trk-nt">پارسل آپ کے شہر ${E(d.city)} میں پہنچ چکا ہے۔ براہِ کرم ${E(d.courier)} کے ${E(d.city)} آفس سے اپنا پارسل وصول کر لیں۔ آفس میں یہ ٹریکنگ نمبر دکھائیں: <b>${E(d.ct)}</b> ${cpB(d.ct)} جلد از جلد وصول کریں۔</div>`:`<div class="box trk-nt">پارسل آپ کے شہر میں پہنچ چکا ہے۔ براہِ کرم اپنا موبائل نمبر آن رکھیں، رائیڈر آپ کو جلد ڈیلیور کر دے گا۔</div>`;
+   if(self&&i>=1)h+=`<div class="box trk-cb"><div><small>کورئیر</small><b>${E(d.courier)}</b></div><div><small>کورئیر ٹریکنگ نمبر</small><b>${E(d.ct)}</b>${cpB(d.ct)}</div></div>`;
+   h+='<div class=box><ol class=trk-tl>'+SS.map((s,k)=>{const st=k<i?'done':k==i?'cur':'todo',t=d.ts[s],x=st=='todo'?'':dsc(k,t);return`<li class="${st}"><i>${st=='done'?'✓':k+1}</i><b>${TT[k]}</b>${x?'<small>'+x+'</small>':''}</li>`}).join('')+'</ol></div>';
+  }
+  h+=`${d.up?'<p class=trk-up>آخری اپڈیٹ: '+bd(d.up)+'</p>':''}<p class=trk-act><button type=button class="btn lt" id=trf>🔄 ریفریش</button></p>`;
+  $('#tr').innerHTML=h},
+ go=async(v,manual)=>{const no=norm(v),box=$('#tr'),my=++tok;
+  if(!no||!RX.test(no)){cur='';box.innerHTML=nfH(String(v||'').trim());return}
+  cur=no;$('#tq').value=no;box.innerHTML='<div class=trk-sp></div>';
+  if(manual){try{history.replaceState(null,'',BS()+'tracking/'+no)}catch(e){}}
+  try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),15000);
+   const r=await fetch('https://firestore.googleapis.com/v1/projects/'+PRJ+'/databases/(default)/documents/public_tracking/'+encodeURIComponent(no)+'?key='+KEY,{signal:c.signal});clearTimeout(tm);
+   if(my!=tok)return;
+   if(r.status==404){box.innerHTML=nfH(no);return}
+   if(!r.ok)throw 0;
+   const d=parse(await r.json());if(my!=tok)return;
+   if(!d.status){box.innerHTML=nfH(no);return}
+   draw(d)}catch(e){if(my==tok)box.innerHTML=erH()}};
+ $('#m').innerHTML=`<div class="sh ch"><h2>اپنا آرڈر ٹریک کریں</h2><div class=sd><i></i></div></div><div class="box trk-f"><form id=tf autocomplete=off><label for=tq>آرڈر نمبر لکھیں</label><div class=trk-r><input id=tq type=text dir=ltr placeholder="Arfi-0112123" autocapitalize=off autocorrect=off spellcheck=false enterkeyhint=search value="${E(q0)}"><button class=btn type=submit>ٹریک کریں</button></div><small>آرڈر نمبر آپ کو واٹس ایپ میسج میں بھیجا گیا تھا۔</small></form></div><div id=tr></div>`;
+ $('#tf').addEventListener('submit',e=>{e.preventDefault();go($('#tq').value,true)});
+ $('#tr').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;
+  if(b.id=='trf'||b.id=='trr')go(cur,false);
+  else if(b.dataset&&b.dataset.c){const t=b.dataset.c,o=b.textContent,ok=()=>{b.textContent='✔ کاپی ہو گیا';setTimeout(()=>b.textContent=o,1500)},fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(x){}a.remove()};navigator.clipboard?navigator.clipboard.writeText(t).then(ok,fb):fb()}});
+ if(String(q0||'').trim())go(q0,false)}
+
 /* ---- پروڈکٹ ---- */
 function prod(id){PP=gp(id);if(!PP){location.href=BS()||'./';return}document.title=PP.n;let m=document.querySelector('meta[name=description]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=PP.md||(PP.n+' — عارفی دارالشفاء کی خالص ہربل دوا۔ پورے پاکستان میں فری ہوم ڈیلیوری اور کیش آن ڈیلیوری۔');try{if(window.SEO&&SU())SEO.apply(document,PP,SU(),{price:x=>sp(PP,x)})}catch(e){}pdraw()}
 function pdraw(){const p=PP,op=p.v[vi][1],S=saleOf(p),pr=S?sp(p,op):op,lb=p.v[vi][0];
@@ -80,7 +134,7 @@ function relSec(p){
  if(L.length<2)return'';
  const i=L.findIndex(x=>x.id==p.id),n=L.length,k=Math.min(3,n-1),R=[];
  for(let j=1;j<=k;j++)R.push(L[(i+j)%n]);
- return`<div class=rel>${secHead('Related Products','اسی زمرے کی دیگر مفید ادویات')}`+(R.length>1?`<div class=rsw><button type=button class="rsb pv" aria-label="پچھلی دوا" onclick="rsGo(this,-1)" disabled>»</button><div class="rsl rl2" onscroll="rsUp(this);relUp(this)">${R.map(x=>card(x)).join('')}</div><button type=button class="rsb nx" aria-label="اگلی دوا" onclick="rsGo(this,1)">«</button></div><div class=rdt></div>`:`<div class=grid style="grid-template-columns:repeat(2,1fr)">${R.map(x=>card(x)).join('')}</div>`)+'</div>'}
+ return`<div class=rel>${secHead('Related Products')}`+(R.length>1?`<div class=rsw><button type=button class="rsb pv" aria-label="پچھلی دوا" onclick="rsGo(this,-1)" disabled>»</button><div class="rsl rl2" onscroll="rsUp(this);relUp(this)">${R.map(x=>card(x)).join('')}</div><button type=button class="rsb nx" aria-label="اگلی دوا" onclick="rsGo(this,1)">«</button></div><div class=rdt></div>`:`<div class=grid style="grid-template-columns:repeat(2,1fr)">${R.map(x=>card(x)).join('')}</div>`)+'</div>'}
 
 /* ---- کارٹ ---- */
 function cart(){document.title='کارٹ | عارفی دارالشفاء';cdraw()}
