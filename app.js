@@ -9,7 +9,7 @@ const badge=()=>{const n=ld().reduce((s,l)=>s+l.q,0),b=$("#cb");if(b){b.textCont
 const toast=t=>{const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),1800)};
 /* ===== سیل (پوری سائٹ یا مخصوص پروڈکٹس) ===== */
 const saleAct=s=>!!(s&&s.on!==false&&Number(s.pct)>0&&(!s.end||new Date(s.end)>new Date()));
-function saleOf(p){if(!p||!p.v||!p.v.some(v=>v[1]>0))return null;const S=(typeof DSALE!=="undefined"&&DSALE)||{},it=(S.items||[]).find(x=>x.id==p.id&&saleAct(x));const b=it||(saleAct(S.site)?S.site:null);let L=null;try{L=lkSale()}catch(e){}return L&&(!b||L.pct>Number(b.pct))?L:b}
+function saleOf(p){if(!p||!p.v||!p.v.some(v=>v[1]>0))return null;const S=(typeof DSALE!=="undefined"&&DSALE)||{},it=(S.items||[]).find(x=>x.id==p.id&&saleAct(x));if(it)return it;return saleAct(S.site)?S.site:null}
 const siteSaleOn=()=>{const S=(typeof DSALE!=="undefined"&&DSALE)||{};return saleAct(S.site)};
 const sp=(p,pr)=>{const s=saleOf(p);return s&&pr?Math.round(pr*(100-Number(s.pct))/100):pr};
 const lp=l=>{const p=gp(l.id);return sp(p,p.v[l.v][1])};
@@ -25,7 +25,7 @@ function calc(c,code,pay){
  /* ایک وقت میں ایک ہی ڈسکاؤنٹ: سیل والی پروڈکٹ ہو تو کوڈ لاگو نہیں ہوتا */
  const cp=code&&!hs?(code.type=="flat"?Math.min(a,Number(code.val)):Math.round(a*Number(code.val)/100)):0;a-=cp;
  const adv=pay=="adv"?Math.round(a*.05):0;a-=adv;
- const ship=shipOf(a);return{orig,sub,sale,hs,n,cp,adv,ship,total:a+ship}}
+ return{orig,sub,sale,hs,n,cp,adv,total:a}}
 const IC={wa:'<svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.05 0C5.5 0 .17 5.33.17 11.88c0 2.09.55 4.13 1.59 5.93L0 24l6.35-1.66a11.87 11.87 0 0 0 5.7 1.45h.01c6.55 0 11.88-5.33 11.88-11.88 0-3.17-1.23-6.15-3.42-8.43zM12.06 21.8a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.77.99 1.01-3.67-.24-.38a9.87 9.87 0 0 1-1.51-5.27c0-5.46 4.45-9.9 9.92-9.9 2.65 0 5.13 1.03 7 2.9a9.84 9.84 0 0 1 2.9 7c0 5.46-4.45 9.92-9.9 9.92zm5.43-7.42c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35z"/></svg>',
 fb:'<svg viewBox="0 0 24 24"><path d="M13.5 22v-8.2h2.8l.5-3.4h-3.3V8.3c0-1 .4-1.7 1.8-1.7h1.6V3.5c-.3 0-1.300-.2-2.500-.2-2.500 0-4.200 1.500-4.200 4.300v2.800H7.400v3.400h2.800V22z"/></svg>',
 ig:'<svg class=ln viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>',
@@ -33,11 +33,11 @@ tt:'<svg viewBox="0 0 24 24"><path d="M16.6 2h-3.2v13.2a2.700 2.700 0 1 1-2.700-
 function lay(){
  const mi=[[BS()||"./","🏠 ہوم"],["MED","💊 ادویات"],[BS()+"tracking","📦 اپنا آرڈر ٹریک کریں","mtk"],[gu("diseases"),"📖 بیماریاں اور ان کے علاج"],[gu("about"),"ℹ️ ہمارا تعارف"],[gu("terms"),"📄 شرائط و ضوابط"]],
   medG=()=>`<div class=mg><button type=button class=mgb id=mgb aria-expanded=false aria-controls=mgl><span>💊 ادویات</span><span class=mga>▾</span></button><div class=mgl id=mgl>${CATS.map(c=>`<a href="${cu(c)}">${c[2]} ${c[1]}</a>`).join("")}</div></div>`;
- document.body.insertAdjacentHTML("afterbegin",`<div class=top>🚚 Rs. 2,000 یا زائد آرڈر پر ہوم ڈیلیوری فری</div><header><button class=mb id=mb aria-label="مینیو"><i></i><i></i><i></i></button><a href="${BS()||'./'}" class=lg><img src=logo.webp alt="عارفی دارالشفاء"></a><a class=cartb href="${gu('cart')}" aria-label="کارٹ">🛒<b id=cb></b></a><div class=sb><svg viewBox="0 0 24 24" class=si><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id=sq type=search placeholder="پروڈکٹ کا نام تلاش کریں…" autocomplete=off enterkeyhint=search aria-label="پروڈکٹ تلاش کریں"><div class=sg id=sg></div></div></header><div class=dr id=dr><div class=dp><button class=dx id=dx aria-label="بند کریں">×</button><img src=logo.webp alt="" style="height:44px;margin:0 16px"><nav>${mi.map(m=>m[0]=="MED"?medG():`<a${m[2]?" class="+m[2]:""} href="${m[0]}">${m[1]}</a>`).join("")}</nav></div></div>`);
+ document.body.insertAdjacentHTML("afterbegin",`<div class=top>🚚 پورے پاکستان میں فری ہوم ڈیلیوری</div><header><button class=mb id=mb aria-label="مینیو"><i></i><i></i><i></i></button><a href="${BS()||'./'}" class=lg><img src=logo.webp alt="عارفی دارالشفاء"></a><a class=cartb href="${gu('cart')}" aria-label="کارٹ">🛒<b id=cb></b></a><div class=sb><svg viewBox="0 0 24 24" class=si><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id=sq type=search placeholder="پروڈکٹ کا نام تلاش کریں…" autocomplete=off enterkeyhint=search aria-label="پروڈکٹ تلاش کریں"><div class=sg id=sg></div></div></header><div class=dr id=dr><div class=dp><button class=dx id=dx aria-label="بند کریں">×</button><img src=logo.webp alt="" style="height:44px;margin:0 16px"><nav>${mi.map(m=>m[0]=="MED"?medG():`<a${m[2]?" class="+m[2]:""} href="${m[0]}">${m[1]}</a>`).join("")}</nav></div></div>`);
  const op=v=>$("#dr").classList.toggle("on",v);$("#mb").onclick=()=>op(1);$("#dx").onclick=()=>op(0);{const g=$("#mgb");if(g)g.onclick=()=>{g.setAttribute("aria-expanded",g.parentNode.classList.toggle("on"))}}$("#dr").onclick=e=>{if(e.target.id=="dr")op(0)};
  const so=(h,i,l)=>`<a href="${h}" target=_blank rel=noopener aria-label="${l}">${IC[i]}</a>`;
  document.body.insertAdjacentHTML("beforeend",`<footer><div class=ft>
- <div class=ft-tr><div><i>💵</i><span><b>کیش آن ڈیلیوری</b><small>وصول کر کے ادائیگی</small></span></div><div><i>🚚</i><span><b>فری ہوم ڈیلیوری</b><small>Rs. 2,000 یا زائد کے آرڈر پر</small></span></div><div><i>🌿</i><span><b>100% ہربل</b><small>خالص جڑی بوٹیاں</small></span></div><div><i>✅</i><span><b>محفوظ پیکنگ</b><small>جانچ کے بعد روانگی</small></span></div></div>
+ <div class=ft-tr><div><i>💵</i><span><b>کیش آن ڈیلیوری</b><small>وصول کر کے ادائیگی</small></span></div><div><i>🚚</i><span><b>فری ہوم ڈیلیوری</b><small>پورے پاکستان میں</small></span></div><div><i>🌿</i><span><b>100% ہربل</b><small>خالص جڑی بوٹیاں</small></span></div><div><i>✅</i><span><b>محفوظ پیکنگ</b><small>جانچ کے بعد روانگی</small></span></div></div>
  <div class=ft-mn>
  <div class=ft-br><img src=logo.webp alt="عارفی دارالشفاء"><p>خالص جڑی بوٹیوں سے تیار کردہ ادویات، پورے پاکستان میں ہوم ڈیلیوری کے ساتھ۔</p><div class=ft-so>${so(wa("I'm from arfidarushifa.pk"),"wa","WhatsApp")}${so("https://www.facebook.com/arfidarushifa/","fb","Facebook")}${so("https://www.instagram.com/arfidarushifa/","ig","Instagram")}${so("https://www.tiktok.com/@arfi_darushifa","tt","TikTok")}</div></div>
  <div class=ft-cat><h4>ادویات کی اقسام</h4><div class=ft-cl>${CATS.map(c=>`<a href="${cu(c)}">${c[2]} ${c[1]}</a>`).join("")}</div></div>
@@ -47,7 +47,7 @@ function lay(){
  <div class=ft-bt><div class=cr>© عارفی دارالشفاء — جملہ حقوق محفوظ ہیں</div><button type=button onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆ اوپر جائیں</button></div></div></footer><button type=button class=fab id=hf aria-label="اپنی صحت کے متعلق مشورہ کریں">اپنی صحت کے متعلق مشورہ کریں</button><div id=toast></div>`);
  badge();search();hfInit();saleCss();
  try{const pc=popCode();if(pc&&!sessionStorage.getItem("pp")){sessionStorage.setItem("pp",1);setTimeout(()=>popup(pc),800)}}catch(e){}}
-const popCode=()=>{if(siteSaleOn()||lkOn())return null;return DCODES.find(c=>c.popup&&c.on!==false&&!(c.exp&&new Date(c.exp+"T23:59:59")<new Date()))||null};
+const popCode=()=>{if(siteSaleOn())return null;return DCODES.find(c=>c.popup&&c.on!==false&&!(c.exp&&new Date(c.exp+"T23:59:59")<new Date()))||null};
 function popup(c){document.body.insertAdjacentHTML("beforeend",`<div class=ov id=pp><div class=pop><button class=cl onclick="$('#pp').remove()" aria-label="بند کریں">×</button><div style="font-size:2.4rem">🎁</div><b style="font-size:1.3rem;color:#1C352D">ہر آرڈر پر ${dlab(c)} ڈسکاؤنٹ!</b><div>یہ کوڈ چیک آؤٹ پر لگائیں</div><div class=cd>${c.k}</div><button class="btn wa" id=cp>📋 کوڈ کاپی کریں</button></div></div>`);
  $("#cp").onclick=()=>{const d=()=>{$("#cp").textContent="✔ کاپی ہو گیا";setTimeout(()=>$("#pp")&&$("#pp").remove(),900)};
  navigator.clipboard?navigator.clipboard.writeText(c.k).then(d,d):d()}}
@@ -210,7 +210,7 @@ let CDT=null;
 function ctStart(){clearInterval(CDT);const e=$("#cdn");if(!e)return;const end=new Date(e.dataset.e).getTime();
  const tick=()=>{const s=Math.floor((end-Date.now())/1000);if(s<=0){clearInterval(CDT);if(typeof pdraw=="function"&&typeof PP!="undefined"&&PP)pdraw();return}
   const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60;
-  e.innerHTML=`<div>${lkLab(e.dataset.e)}</div><div class=cdb>${d?`<b>${d}<small>دن</small></b>`:""}<b>${h}<small>گھنٹے</small></b><b>${m}<small>منٹ</small></b><b>${x}<small>سیکنڈ</small></b></div>`};
+  e.innerHTML=`<div>⏰ سیل ختم ہونے میں باقی وقت</div><div class=cdb>${d?`<b>${d}<small>دن</small></b>`:""}<b>${h}<small>گھنٹے</small></b><b>${m}<small>منٹ</small></b><b>${x}<small>سیکنڈ</small></b></div>`};
  tick();CDT=setInterval(tick,1000)}
 function saleCss(){if($("#sls"))return;document.head.insertAdjacentHTML("beforeend",`<style id=sls>
 .sbd{position:absolute;top:8px;right:8px;z-index:2;background:#d32f2f;color:#fff;font:700 .72rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.4px;padding:5px 9px;border-radius:6px;box-shadow:0 2px 6px #0003;direction:ltr}
@@ -225,126 +225,3 @@ function saleCss(){if($("#sls"))return;document.head.insertAdjacentHTML("beforee
 .cdb b small{font:400 .7rem/1.9 'Noto Nastaliq Urdu',serif;opacity:.92}
 .sinfo{background:#fff4f3;border:1px dashed #e53935;color:#8e1313}
 </style>`)}
-
-/* ===================================================================
-   🎰 لکی ڈرا آفر — 25 نومبر 2026 صبح 11:00 سے 24 گھنٹے (پاکستان ٹائم)
-   ہر موبائل پر ایک بار پہیہ گھومتا ہے، 45% یا 50% نکلتا ہے، اور اگلے 1 گھنٹے تک
-   اسی موبائل پر ساری سائٹ میں سیل لگ جاتی ہے (قیمت، کارٹ اور آرڈر سمیت)۔
-   اس سسٹم کو ہٹانا ہو تو بیک اپ والی app.js اور pages.js اپلوڈ کر دیں۔
-   =================================================================== */
-const LK={
- start:new Date("2026-11-25T11:00:00+05:00").getTime(), /* آفر شروع ہونے کا وقت */
- hours:24,        /* آفر کتنے گھنٹے چلے */
- minutes:60,      /* ہر کسٹمر کو ڈسکاؤنٹ کتنے منٹ ملے */
- wheel:[10,15,20,25,30,35,40,45,50], /* پہیے کے خانے */
- p50:0.5,         /* 50% نکلنے کا امکان (0.5 = آدھے لوگوں کو 50%، آدھوں کو 45%)۔ نتیجہ ہمیشہ 45 یا 50 ہی آئے گا */
- key:"arfi_lk",testKey:"arfi_lk_t",
- secret:"arfi-test-2511" /* ٹیسٹ کا خفیہ لنک: کسی بھی پیج کے آخر میں ?lucky=arfi-test-2511 */
-};
-let LKA=false,LKB=false,LKSPUN=false;
-function lkEnd(){return LK.start+LK.hours*3600000}
-function lkTest(){try{return sessionStorage.getItem("lk_test")=="1"}catch(e){return false}}
-function lkWin(){const n=Date.now();return n>=LK.start&&n<lkEnd()}
-function lkOn(){return lkTest()||lkWin()}
-function lkSum(r){let h=7;const s=r.pct+"|"+r.s+"|"+r.e+"|arfi";for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
-function lkStore(){return lkTest()?sessionStorage:localStorage}
-function lkKey(){return lkTest()?LK.testKey:LK.key}
-function lkGet(){try{const s=lkStore().getItem(lkKey());if(!s)return null;const r=JSON.parse(s);
- if(r&&LK.wheel.indexOf(r.pct)>=0&&r.e>r.s&&r.e-r.s<=(LK.minutes+1)*60000&&r.c===lkSum(r))return r}catch(e){}return null}
-function lkCookie(){return/(?:^|;\s*)arfi_lk=1/.test(document.cookie)}
-function lkDone(){try{if(lkStore().getItem(lkKey()))return true}catch(e){}return lkTest()?false:lkCookie()}
-function lkOpenable(){return lkOn()&&!lkDone()}
-function lkSale(){const r=lkGet();return r&&r.e>Date.now()?{on:true,pct:r.pct,end:new Date(r.e).toISOString(),lucky:1}:null}
-function lkLab(e){const L=lkSale();return L&&L.end==e?"🎁 آپ کی لکی ڈرا آفر ختم ہونے میں باقی وقت":"⏰ سیل ختم ہونے میں باقی وقت"}
-function lkNote(c){try{const r=lkGet();if(!r||r.e<=Date.now()||!c.some(l=>{const s=saleOf(gp(l.id));return s&&s.lucky}))return"";
- const f=ms=>new Date(ms).toLocaleString("en-GB",{timeZone:"Asia/Karachi",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
- return"\n🎰 لکی ڈرا ڈسکاؤنٹ: "+r.pct+"% (ڈرا: "+f(r.s)+" — ختم: "+f(r.e)+")"+(lkTest()?"\n⚠️ ٹیسٹ آرڈر — اسے نظر انداز کریں":"")}catch(e){return""}}
-
-/* ٹیسٹ کا خفیہ لنک: ?lucky=خفیہ-لفظ شروع کرتا ہے، ?lucky=off بند کرتا ہے (اصلی کسٹمرز پر کوئی اثر نہیں) */
-(function(){try{const q=new URLSearchParams(location.search),k=q.get("lucky");if(k===null)return;
- if(k===LK.secret){sessionStorage.setItem("lk_test","1");sessionStorage.removeItem(LK.testKey);sessionStorage.removeItem("lk_seen")}
- else if(k==="off"){sessionStorage.removeItem("lk_test");sessionStorage.removeItem(LK.testKey)}
- q.delete("lucky");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash)}catch(e){}})();
-
-function lkCss(){if($("#lks"))return;document.head.insertAdjacentHTML("beforeend",`<style id=lks>
-.lkc{position:relative;width:min(340px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#FFF8E7,#fff);border-radius:24px;padding:22px 16px 16px;text-align:center;border-top:6px solid var(--gold);box-shadow:0 10px 40px #0008}
-.lkx{position:absolute;top:2px;left:10px;background:none;border:0;font-size:1.8rem;cursor:pointer;color:#333;z-index:3}
-.lkh{display:block;font-weight:400;font-size:1.25rem;color:var(--g);line-height:2.1}
-.lkc p{margin:2px 0 8px;font-size:.92rem;line-height:2.2;color:#333}
-.lkc small{display:block;margin-top:6px;color:#777;font-size:.78rem;line-height:2}
-.lkt{background:#fff3cd;border:1px dashed #b8860b;border-radius:10px;font-size:.8rem;margin-bottom:4px;color:#7a5b00}
-.lkw{position:relative;width:236px;height:236px;margin:10px auto 14px}
-.lkr{width:100%;height:100%;transition:transform 5.3s cubic-bezier(.12,.62,.08,1);will-change:transform;filter:drop-shadow(0 4px 8px #0004)}
-.lkp{position:absolute;top:-12px;left:50%;margin-left:-13px;z-index:2;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:26px solid #d32f2f;filter:drop-shadow(0 2px 2px #0006)}
-.lkgo{animation:pl 1.8s ease-in-out infinite}
-.lkgo:disabled{animation:none;opacity:.85}
-.lkbig{font:800 2.6rem/1.3 system-ui,-apple-system,sans-serif;color:#1C352D;direction:ltr}
-.lkcd{font:700 1.5rem/1.6 system-ui,-apple-system,sans-serif;color:#b71c1c;direction:ltr;margin:4px 0 10px}
-.lkcf{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:24px}
-.lkcf i{position:absolute;top:-24px;font-style:normal;font-size:1.3rem;animation:lkf 2.8s linear forwards}
-@keyframes lkf{to{transform:translateY(520px) rotate(360deg);opacity:.2}}
-.lkq{position:fixed;left:12px;bottom:66px;z-index:60;border:0;font:700 .9rem/1.7 'Noto Nastaliq Urdu',serif;color:#fff;background:linear-gradient(135deg,#d32f2f,#8e1313);border-radius:50px;padding:6px 16px;box-shadow:0 4px 14px #0004;cursor:pointer}
-.lkq bdi{direction:ltr;font-family:system-ui,-apple-system,sans-serif}
-@media (prefers-reduced-motion:reduce){.lkgo,.lkcf i{animation:none}}
-</style>`)}
-
-function lkOpen(){if($("#lko")||!lkOpenable())return;lkCss();
- const seg=360/LK.wheel.length,R=96,pt=(a,r)=>{const t=a*Math.PI/180;return[(100+r*Math.sin(t)).toFixed(2),(100-r*Math.cos(t)).toFixed(2)]},
-  cols=["#1C352D","#97C93D","#C9A227"],tc=["#ffffff","#1C352D","#1C352D"];
- const segs=LK.wheel.map((v,i)=>{const c=i*seg,a=pt(c-seg/2,R),b=pt(c+seg/2,R);
-  return`<path d="M100 100L${a[0]} ${a[1]}A${R} ${R} 0 0 1 ${b[0]} ${b[1]}Z" fill="${cols[i%3]}" stroke="#ffffff" stroke-width="1.5"/><text x="100" y="32" transform="rotate(${c} 100 100)" text-anchor="middle" font-size="15" font-weight="700" fill="${tc[i%3]}" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif">${v}%</text>`}).join("");
- document.body.insertAdjacentHTML("beforeend",`<div class=ov id=lko style="z-index:250"><div class=lkc id=lkc><button class=lkx id=lkx type=button onclick=lkClose() aria-label="بند کریں">×</button>${lkTest()?'<div class=lkt>🧪 ٹیسٹ موڈ — یہ اصل ڈرا نہیں</div>':''}<b class=lkh>🎁 لکی ڈرا — آج کا خاص موقع!</b><p>10% سے 50% تک ڈسکاؤنٹ جیتنے کا موقع! نیچے بٹن دبائیں اور پہیہ گھمائیں۔ جو ڈسکاؤنٹ نکلے گا وہ اگلے 1 گھنٹے تک آپ کے لیے ہر پروڈکٹ پر لگ جائے گا۔</p><div class=lkw><i class=lkp></i><div id=lkw class=lkr><svg viewBox="0 0 200 200" width="100%" height="100%"><circle cx="100" cy="100" r="99" fill="#C9A227"/>${segs}<circle cx="100" cy="100" r="17" fill="#ffffff" stroke="#C9A227" stroke-width="3"/><text x="100" y="106" text-anchor="middle" font-size="16">🎁</text></svg></div></div><button class="btn wa lkgo" id=lkb type=button onclick=lkSpin()>🎰 پہیہ گھمائیں</button></div></div>`);
- document.body.style.overflow="hidden"}
-
-function lkClose(){const o=$("#lko");if(o)o.remove();document.body.style.overflow="";if(LKSPUN){LKSPUN=false;location.reload()}}
-function lkShop(){LKSPUN=false;location.href=cu(CATS[0])}
-
-function lkSpin(){if(LKB||lkDone())return;LKB=true;
- const pct=Math.random()<LK.p50?50:45,idx=LK.wheel.indexOf(pct),n=Date.now(),r={pct:pct,s:n,e:n+LK.minutes*60000+6000};r.c=lkSum(r);
- try{lkStore().setItem(lkKey(),JSON.stringify(r));if(!lkGet())throw 0}catch(e){LKB=false;toast("❌ براؤزر اسٹوریج بند ہے (پرائیویٹ موڈ؟)، عام موڈ میں کھولیں");return}
- if(!lkTest()){try{document.cookie="arfi_lk=1; max-age=31536000; path=/; SameSite=Lax"}catch(e){}}
- LKSPUN=true;
- const seg=360/LK.wheel.length,jit=(Math.random()-.5)*seg*.6,ang=360*6-idx*seg+jit,w=$("#lkw"),b=$("#lkb"),x=$("#lkx");
- if(b){b.disabled=true;b.textContent="🎰 پہیہ گھوم رہا ہے..."}if(x)x.style.display="none";
- let done=false;const fin=()=>{if(done)return;done=true;lkResult(r)};
- if(w){w.addEventListener("transitionend",fin,{once:true});w.style.transform="rotate("+ang+"deg)"}
- setTimeout(fin,5700)}
-
-function lkResult(r){const c=$("#lkc");if(!c)return;const E=["🎉","✨","🎁","🌟","🎊"];
- c.innerHTML=`<button class=lkx type=button onclick=lkClose() aria-label="بند کریں">×</button><div class=lkcf>${Array.from({length:20},()=>`<i style="left:${(Math.random()*94).toFixed(0)}%;animation-delay:${(Math.random()*.9).toFixed(2)}s">${E[Math.floor(Math.random()*E.length)]}</i>`).join("")}</div>${lkTest()?'<div class=lkt>🧪 ٹیسٹ موڈ</div>':''}<div style="font-size:2.6rem;line-height:1.5">🎉</div><b class=lkh>مبارک ہو!</b><div class=lkbig>${r.pct}% OFF</div><p>آپ نے <b>${r.pct}%</b> ڈسکاؤنٹ جیت لیا ہے! اگلے 1 گھنٹے میں آپ جو بھی آرڈر کریں گے اس پر <b>${r.pct}%</b> ڈسکاؤنٹ ملے گا۔</p><div class=lkcd>⏳ <span id=lkt2>60:00</span></div><button class="btn wa" type=button onclick=lkShop()>🛍️ ابھی خریداری شروع کریں</button><small>یہ ڈسکاؤنٹ صرف ایک گھنٹے کے لیے ہے</small>`;
- lkChip()}
-
-function lkExpired(){const o=$("#lko");if(o)o.remove();document.body.style.overflow="";LKSPUN=false;if($("#lke"))return;lkCss();
- document.body.insertAdjacentHTML("beforeend",`<div class=ov id=lke style="z-index:260"><div class=lkc><b class=lkh>⏰ ڈسکاؤنٹ کا وقت ختم</b><p>آپ کی لکی ڈرا ڈسکاؤنٹ کا ایک گھنٹہ پورا ہو گیا ہے۔ اب قیمتیں عام ہو جائیں گی۔</p><button class="btn wa" type=button onclick="location.reload()">ٹھیک ہے</button></div></div>`)}
-
-function lkChip(){try{const r=lkGet(),now=Date.now(),act=!!(r&&r.e>now);let c=$("#lkq");
- if(LKA&&!act){LKA=false;lkExpired()}
- if(act){LKA=true;lkCss();const s=Math.max(0,Math.floor((r.e-now)/1000)),t=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-  if(!c){document.body.insertAdjacentHTML("beforeend","<button class=lkq id=lkq type=button></button>");c=$("#lkq")}
-  c.onclick=null;c.innerHTML="🎁 "+r.pct+"% آف · <bdi>"+t+"</bdi>";const t2=$("#lkt2");if(t2)t2.textContent=t}
- else if(lkOpenable()){lkCss();if(!c){document.body.insertAdjacentHTML("beforeend","<button class=lkq id=lkq type=button></button>");c=$("#lkq")}c.textContent="🎁 لکی ڈرا کھیلیں";c.onclick=lkOpen}
- else if(c)c.remove()}catch(e){}}
-
-function lkInit(){try{lkChip();setInterval(lkChip,1000);document.addEventListener("visibilitychange",lkChip);
- const cp=typeof R!=="undefined"&&R&&R[0]=="cart";
- if(lkOpenable()&&!cp&&!sessionStorage.getItem("lk_seen")){sessionStorage.setItem("lk_seen","1");setTimeout(lkOpen,900)}}catch(e){}}
-addEventListener("DOMContentLoaded",lkInit);
-
-/* ===================================================================
-   🚚 ڈیلیوری اصول (آفر والی فائلوں کے لیے):
-   ڈسکاؤنٹ کے بعد رقم 2,000 یا اس سے زائد ہو تو ہوم ڈیلیوری فری، اس سے کم پر ڈیلیوری چارجز 350 روپے۔
-   =================================================================== */
-const SHIP={min:2000,fee:350};
-function shipOf(net){return net>0&&net<SHIP.min?SHIP.fee:0}
-function shipNote(x){return x>0?(x<SHIP.min?" + ڈیلیوری چارجز "+fmt(SHIP.fee)+" = کل "+fmt(x+SHIP.fee):" (ہوم ڈیلیوری فری)"):""}
-function shipBox(t){if(!t||!t.n)return"";const net=t.total-t.ship;
- if(t.ship){const need=SHIP.min-net,pc=Math.max(4,Math.min(100,Math.round(net*100/SHIP.min)));
-  return`<div class=box id=shb style="border:2px dashed #C9A227;background:#FFFBEF"><b>🚚 ڈیلیوری چارجز بچائیں</b><p style="margin:2px 0 8px;font-size:.92rem;line-height:2.1">آپ کے آرڈر پر ڈیلیوری چارجز <b>${fmt(SHIP.fee)}</b> لاگو ہو رہے ہیں۔ ${fmt(SHIP.min)} یا اس سے زائد کے آرڈر پر ہوم ڈیلیوری بالکل فری ہے۔ ڈیلیوری فری حاصل کرنے کے لیے صرف <b>${fmt(need)}</b> کی مزید پروڈکٹس شامل کریں۔</p><div style="height:8px;background:#e9e2c8;border-radius:8px;overflow:hidden"><div style="height:100%;width:${pc}%;background:linear-gradient(90deg,#97C93D,#6fa31f)"></div></div><a class="btn lt" style="margin-top:12px" href="${cu(CATS[0])}">➕ مزید پروڈکٹس شامل کریں</a></div>`}
- return`<div class=box id=shb style="border:2px solid #97C93D;background:#F3FAE6"><b>🎉 مبارک ہو! آپ کے آرڈر پر ہوم ڈیلیوری فری ہے</b></div>`}
-function codInfo(t,rest){return t.ship?
- "کیش آن ڈیلیوری کی صورت میں ڈیلیوری چارجز ("+fmt(SHIP.fee)+") ایڈوانس وصول کیے جاتے ہیں، اور باقی "+fmt(rest)+" آپ ڈیلیوری کے وقت کورئیر کو ادا کریں گے۔ ایڈوانس کی ادائیگی کے لیے ہماری ٹیم آپ سے رابطہ کر کے اکاؤنٹ نمبر فراہم کر دے گی۔":
- "آپ کے آرڈر پر ہوم ڈیلیوری فری ہے۔ کیش آن ڈیلیوری کی صورت میں آرڈر کی تصدیق کے لیے "+fmt(SHIP.fee)+" ایڈوانس وصول کیے جاتے ہیں جو کل رقم میں سے منہا ہوں گے، اور باقی "+fmt(rest)+" آپ ڈیلیوری کے وقت کورئیر کو ادا کریں گے۔ ایڈوانس کی ادائیگی کے لیے ہماری ٹیم آپ سے رابطہ کر کے اکاؤنٹ نمبر فراہم کر دے گی۔"}
-function codLine(t,rest){return t.ship?
- "کیش آن ڈیلیوری (ڈیلیوری چارجز "+fmt(SHIP.fee)+" ایڈوانس، باقی "+fmt(rest)+" کورئیر کو)":
- "کیش آن ڈیلیوری (ڈیلیوری فری — "+fmt(SHIP.fee)+" ایڈوانس کل رقم میں منہا، باقی "+fmt(rest)+" کورئیر کو)"}
-try{FAQ.forEach(f=>{if(String(f[0]).indexOf("ڈلیوری چارجز کتنے")>=0)f[1]="جی ہاں، کیش آن ڈیلیوری کی سہولت موجود ہے۔ "+fmt(SHIP.min)+" یا اس سے زائد (ڈسکاؤنٹ کے بعد) کے آرڈر پر پورے پاکستان میں ہوم ڈیلیوری فری ہے، جبکہ "+fmt(SHIP.min)+" سے کم کے آرڈر پر "+fmt(SHIP.fee)+" ڈیلیوری چارجز لاگو ہوتے ہیں۔ کیش آن ڈیلیوری کی صورت میں "+fmt(SHIP.fee)+" ایڈوانس جمع کروانے ہوتے ہیں جبکہ باقی رقم آپ ادویات وصول کرتے وقت ادا کرتے ہیں۔"})}catch(e){}
